@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 @RequestMapping("/alocacoes")
@@ -102,6 +103,7 @@ public class AlocacaoController {
     }
     
     @GetMapping("/{id}/devolucao")
+    @Transactional
     public String devolucaoForm(@PathVariable Long id, Model model) {
         Alocacao alocacao = alocacaoService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Alocação não encontrada: " + id));

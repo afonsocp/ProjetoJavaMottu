@@ -1,54 +1,267 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <title>Fechar Manutenção - Mottu Fleet</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fechar Manutenção - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
     <style>
-        .form-container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .error { color: red; font-size: 0.9em; }
-        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
-        .btn:hover { background: #0056b3; }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #545b62; }
-        .info-box { background: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        .success-box { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #1d4ed8;
+            --light-blue: #dbeafe;
+            --success-blue: #3b82f6;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-blue);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-secondary {
+            background: var(--gray-500);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .info-box {
+            background: var(--light-blue);
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>✅ Fechar Manutenção</h1>
-        
-        <div class="info-box">
-            <h3>📋 Dados da Manutenção</h3>
-            <p><strong>Moto:</strong> <span th:text="${manutencao.moto.placa} + ' - ' + ${manutencao.moto.modelo}">ABC1234 - Honda CG 160</span></p>
-            <p><strong>Motivo:</strong> <span th:text="${manutencao.motivo}">Manutenção preventiva</span></p>
-            <p><strong>Aberto em:</strong> <span th:text="${#temporals.format(manutencao.abertoEm, 'dd/MM/yyyy HH:mm')}">10/01/2024 14:30</span></p>
-            <p><strong>Aberto por:</strong> <span th:text="${manutencao.abertoPor}">admin@mottu.com</span></p>
-            <p th:if="${manutencao.observacoes}"><strong>Observações:</strong> <span th:text="${manutencao.observacoes}">Observações iniciais</span></p>
-        </div>
-        
-        <div class="success-box">
-            <strong>✅ Finalizando Manutenção:</strong> Após fechar, a moto ficará <strong>DISPONÍVEL</strong> 
-            novamente para alocações.
-        </div>
-        
-        <form th:action="@{/manutencoes/{id}/fechar(id=${manutencao.id})}" th:object="${manutencaoFechamentoForm}" method="post">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
             
-            <div class="form-group">
-                <label for="observacoes">Observações Finais:</label>
-                <textarea th:field="*{observacoes}" id="observacoes" rows="4" 
-                          placeholder="Descreva os serviços realizados, peças trocadas, condições finais da moto, etc." required></textarea>
-                <div class="error" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></div>
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-house me-1"></i>Dashboard
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            
-            <div style="margin-top: 20px;">
-                <button type="submit" class="btn" style="background: #28a745;">✅ Fechar Manutenção</button>
-                <a href="/manutencoes" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-1">
+                            <i class="bi bi-check-circle me-3"></i>Fechar Manutenção
+                        </h1>
+                        <p class="mb-0">Finalizar ordem de serviço e liberar motocicleta</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/manutencoes" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar
+                        </a>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+
+        <div class="container">
+            <!-- Alerts -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${success}">Mensagem de sucesso</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <span th:text="${error}">Mensagem de erro</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Informações da Manutenção -->
+                    <div class="info-box">
+                        <h4 class="mb-3">
+                            <i class="bi bi-info-circle me-2"></i>Dados da Manutenção
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong><i class="bi bi-bicycle me-1"></i>Moto:</strong> 
+                                    <span th:text="${manutencao.moto.placa} + ' - ' + ${manutencao.moto.modelo}">ABC1234 - Honda CG 160</span>
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="bi bi-clipboard-check me-1"></i>Motivo:</strong> 
+                                    <span th:text="${manutencao.motivo}">Manutenção preventiva</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong><i class="bi bi-calendar me-1"></i>Aberto em:</strong> 
+                                    <span th:text="${manutencao.abertoEm}">10/01/2024 14:30</span>
+                                </p>
+                                <p class="mb-0">
+                                    <strong><i class="bi bi-person me-1"></i>Aberto por:</strong> 
+                                    <span th:text="${manutencao.abertoPor}">admin@neomoto.com</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aviso de Finalização -->
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>Finalizando Manutenção:</strong> Após fechar, a moto ficará <strong>DISPONÍVEL</strong> 
+                        novamente para alocações.
+                    </div>
+
+                    <!-- Formulário de Fechamento -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-clipboard-check me-2"></i>Fechamento da Manutenção
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/manutencoes/{id}/fechar(id=${manutencao.id})}" th:object="${fechamentoForm}" method="post">
+                                
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="observacoes" class="form-label">
+                                            <i class="bi bi-journal-text me-1"></i>Observações Finais
+                                        </label>
+                                        <textarea class="form-control" 
+                                                  th:field="*{observacoes}" 
+                                                  id="observacoes" 
+                                                  rows="5"
+                                                  placeholder="Descreva os serviços realizados, peças trocadas, condições finais da moto, recomendações, etc."></textarea>
+                                        <div class="form-text">Registre todos os serviços executados e observações importantes</div>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12 d-flex justify-content-end gap-2">
+                                        <a href="/manutencoes" class="btn btn-secondary">
+                                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                                        </a>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-check-circle me-1"></i>Fechar Manutenção
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

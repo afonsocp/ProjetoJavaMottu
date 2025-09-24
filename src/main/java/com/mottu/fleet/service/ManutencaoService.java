@@ -23,6 +23,7 @@ public class ManutencaoService {
     
     private final ManutencaoRepository manutencaoRepository;
     private final MotoService motoService;
+    private final AlocacaoService alocacaoService;
     
     public Page<Manutencao> findAll(Long motoId, Manutencao.StatusManutencao status, Pageable pageable) {
         return manutencaoRepository.findByFilters(motoId, status, pageable);
@@ -86,8 +87,7 @@ public class ManutencaoService {
         Moto moto = manutencao.getMoto();
         
         // Verificar se moto tem alocação ativa
-        boolean temAlocacaoAtiva = moto.getAlocacoes().stream()
-                .anyMatch(alocacao -> alocacao.isAtiva());
+        boolean temAlocacaoAtiva = alocacaoService.findAtivaByMotoId(moto.getId()).isPresent();
         
         if (!temAlocacaoAtiva) {
             motoService.atualizarStatus(moto.getId(), Moto.StatusMoto.DISPONIVEL);

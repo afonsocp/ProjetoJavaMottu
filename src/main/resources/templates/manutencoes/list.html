@@ -346,48 +346,6 @@
                 </div>
             </div>
 
-            <!-- Manutenções Abertas -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="bi bi-clock me-2"></i>Manutenções Abertas
-                    <span class="badge bg-warning ms-2">1</span>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="manutencao-card aberta p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h6 class="mb-1">
-                                            <i class="bi bi-bicycle me-2"></i>
-                                            <strong>DEF5678</strong> - Honda Biz 125
-                                        </h6>
-                                        <p class="mb-1">
-                                            <i class="bi bi-tools me-2"></i>
-                                            <strong>Motivo:</strong> Revisão dos 15.000 km
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="bi bi-calendar me-2"></i>
-                                            <strong>Aberta:</strong> 23/09/2024 às 10:15
-                                        </p>
-                                        <p class="mb-0">
-                                            <i class="bi bi-person me-2"></i>
-                                            <strong>Por:</strong> Admin Sistema
-                                        </p>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <span class="badge bg-warning mb-2 d-block text-dark">ABERTA</span>
-                                        <a href="/manutencoes/1/fechar" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check me-1"></i>Fechar
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Histórico de Manutenções -->
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -412,82 +370,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Manutenção Aberta -->
-                                <tr class="table-warning">
-                                    <td><strong>#008</strong></td>
-                                    <td>DEF5678 - Honda Biz 125</td>
-                                    <td>Revisão dos 15.000 km</td>
-                                    <td>23/09/2024 10:15</td>
-                                    <td>-</td>
-                                    <td>Admin Sistema</td>
-                                    <td><span class="badge bg-warning text-dark">ABERTA</span></td>
+                                <tr th:each="manutencao : ${manutencoes.content}" 
+                                    th:class="${manutencao.status == T(com.mottu.fleet.domain.Manutencao$StatusManutencao).ABERTA} ? 'table-warning' : ''">
+                                    <td><strong th:text="'#' + ${manutencao.id}">#001</strong></td>
+                                    <td th:text="${manutencao.moto.placa} + ' - ' + ${manutencao.moto.modelo}">ABC1234 - Honda CG 160</td>
+                                    <td th:text="${manutencao.motivo}">Motivo</td>
+                                    <td th:text="${manutencao.abertoEm}">22/09/2024 09:15</td>
+                                    <td th:text="${manutencao.fechadoEm ?: '-'}">23/09/2024 17:45</td>
+                                    <td th:text="${manutencao.abertoPor}">Admin Sistema</td>
+                                    <td>
+                                        <span th:if="${manutencao.status == T(com.mottu.fleet.domain.Manutencao$StatusManutencao).ABERTA}" class="badge bg-warning text-dark">ABERTA</span>
+                                        <span th:if="${manutencao.status == T(com.mottu.fleet.domain.Manutencao$StatusManutencao).FECHADA}" class="badge bg-success">FECHADA</span>
+                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <a href="/manutencoes/8" class="btn btn-outline-primary">
+                                            <a th:href="@{'/manutencoes/' + ${manutencao.id}}" class="btn btn-outline-primary">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="/manutencoes/8/fechar" class="btn btn-success">
+                                            <a th:if="${manutencao.status == T(com.mottu.fleet.domain.Manutencao$StatusManutencao).ABERTA}" 
+                                               th:href="@{'/manutencoes/' + ${manutencao.id} + '/fechar'}" 
+                                               class="btn btn-success">
                                                 <i class="bi bi-check"></i>
                                             </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Manutenções Fechadas -->
-                                <tr>
-                                    <td><strong>#007</strong></td>
-                                    <td>ABC1234 - Honda CG 160</td>
-                                    <td>Troca de óleo e filtro</td>
-                                    <td>20/09/2024 14:30</td>
-                                    <td>20/09/2024 16:45</td>
-                                    <td>João Mecânico</td>
-                                    <td><span class="badge bg-success">FECHADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/manutencoes/7" class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="/manutencoes/7/relatorio" class="btn btn-info">
-                                                <i class="bi bi-file-text"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><strong>#006</strong></td>
-                                    <td>XYZ9876 - Yamaha Factor</td>
-                                    <td>Reparo no freio dianteiro</td>
-                                    <td>18/09/2024 09:00</td>
-                                    <td>19/09/2024 11:30</td>
-                                    <td>Maria Técnica</td>
-                                    <td><span class="badge bg-success">FECHADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/manutencoes/6" class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="/manutencoes/6/relatorio" class="btn btn-info">
-                                                <i class="bi bi-file-text"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><strong>#005</strong></td>
-                                    <td>GHI9012 - Yamaha XTZ 150</td>
-                                    <td>Revisão preventiva</td>
-                                    <td>15/09/2024 13:20</td>
-                                    <td>16/09/2024 15:00</td>
-                                    <td>Pedro Mecânico</td>
-                                    <td><span class="badge bg-success">FECHADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/manutencoes/5" class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="/manutencoes/5/relatorio" class="btn btn-info">
+                                            <a th:if="${manutencao.status == T(com.mottu.fleet.domain.Manutencao$StatusManutencao).FECHADA}" 
+                                               th:href="@{'/manutencoes/' + ${manutencao.id} + '/relatorio'}" 
+                                               class="btn btn-info">
                                                 <i class="bi bi-file-text"></i>
                                             </a>
                                         </div>

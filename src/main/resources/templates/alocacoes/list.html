@@ -343,48 +343,7 @@
                 </div>
             </div>
 
-            <!-- Alocações Ativas -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="bi bi-play-circle me-2"></i>Alocações Ativas
-                    <span class="badge bg-success ms-2">1</span>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="alocacao-card ativa p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h6 class="mb-1">
-                                            <i class="bi bi-bicycle me-2"></i>
-                                            <strong>XYZ9876</strong> - Yamaha Factor 125
-                                        </h6>
-                                        <p class="mb-1">
-                                            <i class="bi bi-person me-2"></i>
-                                            Maria Oliveira
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="bi bi-calendar me-2"></i>
-                                            Saída: 23/09/2024 às 08:30
-                                        </p>
-                                        <p class="mb-0">
-                                            <i class="bi bi-building me-2"></i>
-                                            Pátio Centro
-                                        </p>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <span class="badge bg-success mb-2 d-block">ATIVA</span>
-                                        <a href="/alocacoes/2/devolucao" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-arrow-left me-1"></i>Devolver
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        
             <!-- Histórico de Alocações -->
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -408,59 +367,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Alocação Ativa -->
-                                <tr class="table-success">
-                                    <td><strong>#002</strong></td>
-                                    <td>XYZ9876 - Yamaha Factor</td>
-                                    <td>Maria Oliveira</td>
-                                    <td>23/09/2024 08:30</td>
-                                    <td>-</td>
-                                    <td><span class="badge bg-success">ATIVA</span></td>
+                                <tr th:each="alocacao : ${alocacoes.content}" 
+                                    th:class="${alocacao.status == T(com.mottu.fleet.domain.Alocacao$StatusAlocacao).ATIVA} ? 'table-success' : ''">
+                                    <td><strong th:text="'#' + ${alocacao.id}">#001</strong></td>
+                                    <td th:text="${alocacao.moto.placa} + ' - ' + ${alocacao.moto.modelo}">ABC1234 - Honda CG 160</td>
+                                    <td th:text="${alocacao.motorista.nome}">João Silva</td>
+                                    <td th:text="${alocacao.dataHoraSaida}">22/09/2024 09:15</td>
+                                    <td th:text="${alocacao.dataHoraDevolucao ?: '-'}">23/09/2024 17:45</td>
+                                    <td>
+                                        <span th:if="${alocacao.status == T(com.mottu.fleet.domain.Alocacao$StatusAlocacao).ATIVA}" class="badge bg-success">ATIVA</span>
+                                        <span th:if="${alocacao.status == T(com.mottu.fleet.domain.Alocacao$StatusAlocacao).ENCERRADA}" class="badge bg-secondary">ENCERRADA</span>
+                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <a href="/alocacoes/2" class="btn btn-outline-primary">
+                                            <a th:href="@{'/alocacoes/' + ${alocacao.id}}" class="btn btn-outline-primary">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="/alocacoes/2/devolucao" class="btn btn-warning">
+                                            <a th:if="${alocacao.status == T(com.mottu.fleet.domain.Alocacao$StatusAlocacao).ATIVA}" 
+                                               th:href="@{'/alocacoes/' + ${alocacao.id} + '/devolucao'}" 
+                                               class="btn btn-warning">
                                                 <i class="bi bi-arrow-left"></i>
                                             </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Alocações Encerradas -->
-                                <tr>
-                                    <td><strong>#001</strong></td>
-                                    <td>ABC1234 - Honda CG 160</td>
-                                    <td>João Silva</td>
-                                    <td>22/09/2024 09:15</td>
-                                    <td>23/09/2024 17:45</td>
-                                    <td><span class="badge bg-secondary">ENCERRADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/alocacoes/1" class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="/alocacoes/1/relatorio" class="btn btn-info">
-                                                <i class="bi bi-file-text"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><strong>#000</strong></td>
-                                    <td>DEF5678 - Honda Biz 125</td>
-                                    <td>Pedro Costa</td>
-                                    <td>21/09/2024 14:20</td>
-                                    <td>22/09/2024 16:30</td>
-                                    <td><span class="badge bg-secondary">ENCERRADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/alocacoes/3" class="btn btn-outline-primary">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <a href="/alocacoes/3/relatorio" class="btn btn-info">
+                                            <a th:if="${alocacao.status == T(com.mottu.fleet.domain.Alocacao$StatusAlocacao).ENCERRADA}" 
+                                               th:href="@{'/alocacoes/' + ${alocacao.id} + '/relatorio'}" 
+                                               class="btn btn-info">
                                                 <i class="bi bi-file-text"></i>
                                             </a>
                                         </div>
