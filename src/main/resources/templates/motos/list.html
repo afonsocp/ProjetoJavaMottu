@@ -12,12 +12,12 @@
     
     <style>
         :root {
-            --primary-green: #16a34a;
-            --secondary-green: #15803d;
-            --light-green: #dcfce7;
-            --medium-green: #bbf7d0;
-            --dark-green: #14532d;
-            --success-green: #22c55e;
+            --primary-blue: #2563eb;
+            --secondary-blue: #1d4ed8;
+            --light-blue: #dbeafe;
+            --medium-blue: #93c5fd;
+            --dark-blue: #1e40af;
+            --success-blue: #3b82f6;
             --black: #000000;
             --white: #ffffff;
             --gray-100: #f8fafc;
@@ -32,7 +32,7 @@
         }
 
         .navbar {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-bottom: 3px solid var(--black);
         }
@@ -55,13 +55,13 @@
 
         .stats-card:hover {
             transform: translateY(-3px);
-            background: var(--light-green);
-            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+            background: var(--light-blue);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
         }
 
         .stats-card .icon {
             font-size: 2.5rem;
-            color: var(--primary-green);
+            color: var(--primary-blue);
             margin-bottom: 1rem;
         }
 
@@ -87,14 +87,14 @@
         }
 
         .card-header {
-            background: var(--primary-green);
+            background: var(--primary-blue);
             color: var(--white);
             border-bottom: 2px solid var(--black);
             font-weight: 600;
         }
 
         .btn-primary {
-            background: var(--primary-green);
+            background: var(--primary-blue);
             border: 2px solid var(--black);
             color: var(--white);
             font-weight: 600;
@@ -103,25 +103,25 @@
         }
 
         .btn-primary:hover {
-            background: var(--secondary-green);
+            background: var(--secondary-blue);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
         }
 
         .btn-success {
-            background: var(--success-green);
+            background: var(--success-blue);
             border: 2px solid var(--black);
             color: var(--white);
         }
 
         .btn-outline-primary {
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
             background: var(--white);
         }
 
         .btn-outline-primary:hover {
-            background: var(--primary-green);
+            background: var(--primary-blue);
             color: var(--white);
         }
 
@@ -133,7 +133,7 @@
         }
 
         .table thead {
-            background: var(--primary-green);
+            background: var(--primary-blue);
             color: var(--white);
         }
 
@@ -143,7 +143,7 @@
         }
 
         .table tbody tr:hover {
-            background: var(--light-green);
+            background: var(--light-blue);
         }
 
         .form-control, .form-select {
@@ -152,8 +152,8 @@
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
         }
 
         .badge {
@@ -161,8 +161,8 @@
             font-weight: 600;
         }
 
-        .badge.bg-success { background: var(--success-green) !important; }
-        .badge.bg-primary { background: var(--primary-green) !important; }
+        .badge.bg-success { background: var(--success-blue) !important; }
+        .badge.bg-primary { background: var(--primary-blue) !important; }
         .badge.bg-warning { background: #eab308 !important; color: var(--black) !important; }
         .badge.bg-secondary { background: var(--gray-500) !important; }
 
@@ -172,9 +172,9 @@
         }
 
         .alert-success {
-            background: var(--light-green);
-            border-color: var(--primary-green);
-            color: var(--dark-green);
+            background: var(--light-blue);
+            border-color: var(--primary-blue);
+            color: var(--dark-blue);
         }
     </style>
 </head>
@@ -323,7 +323,7 @@
                     <span>
                         <i class="bi bi-list me-2"></i>Lista de Motos
                     </span>
-                    <span class="badge bg-primary">4 motos encontradas</span>
+                    <span class="badge bg-primary" th:text="${motos.totalElements} + ' motos encontradas'">4 motos encontradas</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -339,79 +339,74 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Dados de exemplo -->
-                                <tr>
-                                    <td><strong>ABC1234</strong></td>
-                                    <td>Honda CG 160</td>
-                                    <td>2024</td>
-                                    <td>15,500 km</td>
-                                    <td><span class="badge bg-success">DISPONÍVEL</span></td>
+                                <tr th:each="moto : ${motos.content}">
+                                    <td><strong th:text="${moto.placa}">ABC1234</strong></td>
+                                    <td th:text="${moto.modelo}">Honda CG 160</td>
+                                    <td th:text="${moto.ano}">2024</td>
+                                    <td th:text="${#numbers.formatDecimal(moto.kmAtual, 0, 'COMMA', 0, 'POINT')} + ' km'">15,500 km</td>
+                                    <td>
+                                        <span th:class="'badge ' + ${moto.status.name() == 'DISPONIVEL' ? 'bg-success' : (moto.status.name() == 'ALOCADA' ? 'bg-primary' : 'bg-warning text-dark')}"
+                                              th:text="${moto.status.name()}">DISPONÍVEL</span>
+                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <a href="/motos/1/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                            <!-- Botão Ver -->
+                                            <a th:href="@{/motos/{id}(id=${moto.id})}" class="btn btn-outline-info" title="Ver detalhes">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            
+                                            <!-- Botão Editar -->
+                                            <a th:href="@{/motos/{id}/editar(id=${moto.id})}" 
+                                               class="btn btn-outline-primary" 
+                                               sec:authorize="hasAnyRole('ADMIN', 'GERENTE')"
+                                               title="Editar">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="/alocacoes/nova?motoId=1" class="btn btn-success">
+                                            
+                                            <!-- Botão Excluir (apenas se disponível) -->
+                                            <form th:if="${moto.status.name() == 'DISPONIVEL'}" 
+                                                  th:action="@{/motos/{id}/delete(id=${moto.id})}" 
+                                                  method="post" 
+                                                  style="display: inline;"
+                                                  sec:authorize="hasAnyRole('ADMIN', 'GERENTE')"
+                                                  onsubmit="return confirm('Tem certeza que deseja excluir esta moto?')">
+                                                <input type="hidden" name="_method" value="DELETE"/>
+                                                <button type="submit" class="btn btn-outline-danger" title="Excluir">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                            
+                                            <!-- Botão Alocar (apenas se disponível) -->
+                                            <a th:if="${moto.status.name() == 'DISPONIVEL'}" 
+                                               th:href="@{/alocacoes/nova(motoId=${moto.id})}" 
+                                               class="btn btn-success"
+                                               title="Alocar">
                                                 <i class="bi bi-arrow-right"></i>
                                             </a>
-                                            <a href="/manutencoes/abrir?motoId=1" class="btn btn-warning">
+                                            
+                                            <!-- Botão Manutenção (apenas se disponível) -->
+                                            <a th:if="${moto.status.name() == 'DISPONIVEL'}" 
+                                               th:href="@{/manutencoes/abrir(motoId=${moto.id})}" 
+                                               class="btn btn-warning"
+                                               title="Abrir manutenção">
                                                 <i class="bi bi-tools"></i>
                                             </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>XYZ9876</strong></td>
-                                    <td>Yamaha Factor 125</td>
-                                    <td>2023</td>
-                                    <td>8,200 km</td>
-                                    <td><span class="badge bg-primary">ALOCADA</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/motos/2/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <span class="btn btn-secondary disabled">
+                                            
+                                            <!-- Botões desabilitados para motos não disponíveis -->
+                                            <span th:if="${moto.status.name() != 'DISPONIVEL'}" 
+                                                  class="btn btn-secondary disabled"
+                                                  title="Ações indisponíveis">
                                                 <i class="bi bi-lock"></i>
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><strong>DEF5678</strong></td>
-                                    <td>Honda Biz 125</td>
-                                    <td>2023</td>
-                                    <td>12,800 km</td>
-                                    <td><span class="badge bg-warning text-dark">MANUTENÇÃO</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/motos/3/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <span class="btn btn-secondary disabled">
-                                                <i class="bi bi-tools"></i>
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>GHI9012</strong></td>
-                                    <td>Yamaha XTZ 150</td>
-                                    <td>2024</td>
-                                    <td>3,500 km</td>
-                                    <td><span class="badge bg-success">DISPONÍVEL</span></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="/motos/4/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="/alocacoes/nova?motoId=4" class="btn btn-success">
-                                                <i class="bi bi-arrow-right"></i>
-                                            </a>
-                                            <a href="/manutencoes/abrir?motoId=4" class="btn btn-warning">
-                                                <i class="bi bi-tools"></i>
-                                            </a>
-                                        </div>
+                                
+                                <!-- Mensagem quando não há motos -->
+                                <tr th:if="${#lists.isEmpty(motos.content)}">
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox me-2"></i>
+                                        Nenhuma moto encontrada
                                     </td>
                                 </tr>
                             </tbody>
