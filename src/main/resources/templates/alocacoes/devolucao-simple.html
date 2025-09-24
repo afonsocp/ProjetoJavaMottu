@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Devolução - Mottu Fleet</title>
+    <meta charset="UTF-8">
+    <style>
+        .form-container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .error { color: red; font-size: 0.9em; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+        .info-box { background: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🔄 Devolução de Moto</h1>
+        
+        <div class="info-box">
+            <h3>📋 Dados da Alocação</h3>
+            <p><strong>Moto:</strong> <span th:text="${alocacao.moto.placa} + ' - ' + ${alocacao.moto.modelo}">ABC1234 - Honda CG 160</span></p>
+            <p><strong>Motorista:</strong> <span th:text="${alocacao.motorista.nome}">João Silva</span></p>
+            <p><strong>Saída:</strong> <span th:text="${#temporals.format(alocacao.dataHoraSaida, 'dd/MM/yyyy HH:mm')}">15/01/2024 08:00</span></p>
+            <p><strong>Pátio Origem:</strong> <span th:text="${alocacao.patioOrigem.nome}">Centro</span></p>
+        </div>
+        
+        <form th:action="@{/alocacoes/{id}/devolucao(id=${alocacao.id})}" th:object="${devolucaoForm}" method="post">
+            
+            <div class="form-group">
+                <label for="patioDevolucaoId">Pátio de Devolução:</label>
+                <select th:field="*{patioDevolucaoId}" id="patioDevolucaoId" required>
+                    <option value="">Selecione um pátio</option>
+                    <option th:each="patio : ${patios}" 
+                            th:value="${patio.id}" 
+                            th:text="${patio.nome}">
+                        Centro
+                    </option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('patioDevolucaoId')}" th:errors="*{patioDevolucaoId}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="kmDevolucao">KM Atual (opcional):</label>
+                <input type="number" th:field="*{kmDevolucao}" id="kmDevolucao" 
+                       placeholder="Informe o KM atual" />
+                <div class="error" th:if="${#fields.hasErrors('kmDevolucao')}" th:errors="*{kmDevolucao}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="checklistDevolucao">Checklist de Devolução:</label>
+                <textarea th:field="*{checklistDevolucao}" id="checklistDevolucao" rows="4" 
+                          placeholder="Descreva as condições da moto na devolução"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('checklistDevolucao')}" th:errors="*{checklistDevolucao}"></div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn">✅ Finalizar Devolução</button>
+                <a th:href="@{/alocacoes}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

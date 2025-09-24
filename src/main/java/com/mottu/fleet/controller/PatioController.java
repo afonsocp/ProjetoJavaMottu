@@ -44,7 +44,7 @@ public class PatioController {
     public String createForm(Model model) {
         model.addAttribute("patioForm", new PatioForm());
         model.addAttribute("patio", new Patio()); // Para o título do formulário
-        return "patios/form";
+        return "patios/form-simple";
     }
     
     @PostMapping
@@ -77,10 +77,10 @@ public class PatioController {
         
         model.addAttribute("patioForm", PatioForm.fromEntity(patio));
         model.addAttribute("patio", patio); // Para o título do formulário
-        return "patios/form";
+        return "patios/form-simple";
     }
     
-    @PutMapping("/{id}")
+    @PostMapping("/{id}/update")
     @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public String update(@PathVariable Long id, 
                         @Valid @ModelAttribute PatioForm patioForm, 
@@ -91,7 +91,7 @@ public class PatioController {
         if (result.hasErrors()) {
             Patio patio = patioService.findById(id).orElse(new Patio());
             model.addAttribute("patio", patio); // Para o título do formulário
-            return "patios/form";
+            return "patios/form-simple";
         }
         
         try {

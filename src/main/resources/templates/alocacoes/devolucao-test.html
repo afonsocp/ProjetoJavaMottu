@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Devolução - Test</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Devolução de Moto</h1>
+    
+    <p>Alocação ID: <span th:text="${alocacao.id}">1</span></p>
+    <p>Moto: <span th:text="${alocacao.moto.placa}">ABC1234</span></p>
+    
+    <form th:action="@{/alocacoes/{id}/devolucao(id=${alocacao.id})}" method="post">
+        
+        <div>
+            <label for="patioDevolucaoId">Pátio de Devolução:</label>
+            <select name="patioDevolucaoId" id="patioDevolucaoId">
+                <option value="">Selecione um pátio</option>
+                <option th:each="patio : ${patios}" 
+                        th:value="${patio.id}" 
+                        th:text="${patio.nome}">
+                </option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="kmDevolucao">KM Atual:</label>
+            <input type="number" name="kmDevolucao" id="kmDevolucao" />
+        </div>
+        
+        <div>
+            <label for="checklistDevolucao">Checklist:</label>
+            <textarea name="checklistDevolucao" id="checklistDevolucao" rows="3"></textarea>
+        </div>
+        
+        <div>
+            <button type="submit">Finalizar Devolução</button>
+            <a th:href="@{/alocacoes}">Cancelar</a>
+        </div>
+    </form>
+</body>
+</html>

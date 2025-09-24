@@ -49,7 +49,7 @@ public class MotoController {
     public String createForm(Model model) {
         model.addAttribute("motoForm", new MotoForm());
         model.addAttribute("moto", new Moto()); // Para o título do formulário
-        return "motos/form";
+        return "motos/form-create-simple";
     }
     
     @PostMapping
@@ -82,7 +82,7 @@ public class MotoController {
         
         model.addAttribute("motoForm", MotoForm.fromEntity(moto));
         model.addAttribute("moto", moto); // Para o título do formulário
-        return "motos/form";
+        return "motos/form-simple";
     }
     
     @PutMapping("/{id}")

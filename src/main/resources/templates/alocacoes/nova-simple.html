@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nova Alocação - Teste</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Nova Alocação - Teste</h1>
+        
+        <form th:action="@{/alocacoes}" method="POST" th:object="${alocacaoForm}">
+            <div class="mb-3">
+                <label for="motoId" class="form-label">Moto</label>
+                <select class="form-select" th:field="*{motoId}" id="motoId" required>
+                    <option value="">Selecione uma moto</option>
+                    <option th:each="moto : ${motosDisponiveis}" 
+                            th:value="${moto.id}" 
+                            th:text="${moto.placa} + ' - ' + ${moto.modelo}"
+                            th:selected="${moto.id == alocacaoForm.motoId}">
+                        ABC1234 - Honda CG 160
+                    </option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="motoristaId" class="form-label">Motorista</label>
+                <select class="form-select" th:field="*{motoristaId}" id="motoristaId" required>
+                    <option value="">Selecione um motorista</option>
+                    <option th:each="motorista : ${motoristasAtivos}" 
+                            th:value="${motorista.id}" 
+                            th:text="${motorista.nome} + ' - ' + ${motorista.cpf}"
+                            th:selected="${motorista.id == alocacaoForm.motoristaId}">
+                        João Silva - 123.456.789-00
+                    </option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="patioOrigemId" class="form-label">Pátio de Origem</label>
+                <select class="form-select" th:field="*{patioOrigemId}" id="patioOrigemId" required>
+                    <option value="">Selecione um pátio</option>
+                    <option th:each="patio : ${patios}" 
+                            th:value="${patio.id}" 
+                            th:text="${patio.nome} + ' - ' + ${patio.endereco}"
+                            th:selected="${patio.id == alocacaoForm.patioOrigemId}">
+                        Pátio Central - Rua das Flores, 123
+                    </option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="checklistSaida" class="form-label">Checklist de Saída</label>
+                <textarea class="form-control" th:field="*{checklistSaida}" id="checklistSaida" rows="4" 
+                          placeholder="Descreva o estado da moto na saída..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-success">Alocar Moto</button>
+            <a href="/motos" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

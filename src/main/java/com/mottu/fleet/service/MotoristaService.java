@@ -1,8 +1,10 @@
 package com.mottu.fleet.service;
 
 import com.mottu.fleet.domain.Motorista;
+import com.mottu.fleet.domain.Alocacao;
 import com.mottu.fleet.dto.MotoristaForm;
 import com.mottu.fleet.repository.MotoristaRepository;
+import com.mottu.fleet.repository.AlocacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class MotoristaService {
     
     private final MotoristaRepository motoristaRepository;
+    private final AlocacaoRepository alocacaoRepository;
     
     public Page<Motorista> findAll(String nome, String cpf, Boolean ativo, Pageable pageable) {
         return motoristaRepository.findByFilters(nome, cpf, ativo, pageable);
@@ -75,14 +78,11 @@ public class MotoristaService {
         Motorista motorista = motoristaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Motorista não encontrado: " + id));
         
-        // Verificar se motorista tem alocações ativas
-        if (!motorista.getAlocacoes().isEmpty()) {
-            boolean temAlocacaoAtiva = motorista.getAlocacoes().stream()
-                    .anyMatch(alocacao -> alocacao.isAtiva());
-            
-            if (temAlocacaoAtiva) {
-                throw new IllegalArgumentException("Não é possível excluir motorista com alocação ativa");
-            }
+        // Verificar se motorista tem alocações ativas usando query direta
+        Optional<Alocacao> alocacaoAtiva = alocacaoRepository.findAtivaByMotoristaId(id);
+        
+        if (alocacaoAtiva.isPresent()) {
+            throw new IllegalArgumentException("Não é possível excluir motorista com alocação ativa");
         }
         
         motoristaRepository.delete(motorista);

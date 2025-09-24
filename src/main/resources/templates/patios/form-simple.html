@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pátio - Mottu Fleet</title>
+    <meta charset="UTF-8">
+    <style>
+        .form-container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .error { color: red; font-size: 0.9em; }
+        .btn { background: #2563eb; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn:hover { background: #1d4ed8; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🏢 <span th:text="${patio.id != null ? 'Editar' : 'Novo'} + ' Pátio'">Novo Pátio</span></h1>
+        
+        <form th:action="${patio.id != null ? '/patios/' + patio.id + '/update' : '/patios'}" th:object="${patioForm}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" th:field="*{nome}" id="nome" required />
+                <div class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" th:field="*{endereco}" id="endereco" />
+                <div class="error" th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="capacidadeOpcional">Capacidade (opcional):</label>
+                <input type="number" th:field="*{capacidadeOpcional}" id="capacidadeOpcional" min="1" />
+                <div class="error" th:if="${#fields.hasErrors('capacidadeOpcional')}" th:errors="*{capacidadeOpcional}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações:</label>
+                <textarea th:field="*{observacoes}" id="observacoes" rows="3"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn">Salvar</button>
+                <a href="/patios" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

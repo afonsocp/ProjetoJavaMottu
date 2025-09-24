@@ -69,7 +69,7 @@ public class AlocacaoController {
         model.addAttribute("motoristasAtivos", motoristaService.findAtivosComCnhValida());
         model.addAttribute("patios", patioService.findAll());
         
-        return "alocacoes/nova";
+        return "alocacoes/nova-simple";
     }
     
     @PostMapping
@@ -114,21 +114,22 @@ public class AlocacaoController {
         model.addAttribute("devolucaoForm", new DevolucaoForm());
         model.addAttribute("patios", patioService.findAll());
         
-        return "alocacoes/devolucao";
+        return "alocacoes/devolucao-test";
     }
     
     @PostMapping("/{id}/devolucao")
     public String devolver(@PathVariable Long id, 
-                          @Valid @ModelAttribute DevolucaoForm devolucaoForm, 
-                          BindingResult result, 
+                          @RequestParam Long patioDevolucaoId,
+                          @RequestParam(required = false) Long kmDevolucao,
+                          @RequestParam(required = false) String checklistDevolucao,
                           RedirectAttributes redirectAttributes) {
         
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("error", "Dados inválidos");
-            return "redirect:/alocacoes/" + id + "/devolucao";
-        }
-        
         try {
+            DevolucaoForm devolucaoForm = new DevolucaoForm();
+            devolucaoForm.setPatioDevolucaoId(patioDevolucaoId);
+            devolucaoForm.setKmDevolucao(kmDevolucao);
+            devolucaoForm.setChecklistDevolucao(checklistDevolucao);
+            
             alocacaoService.devolver(id, devolucaoForm);
             redirectAttributes.addFlashAttribute("success", "Moto devolvida com sucesso!");
             return "redirect:/alocacoes";

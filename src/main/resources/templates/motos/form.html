@@ -205,6 +205,7 @@
                                   method="POST" 
                                   th:object="${motoForm}">
                                 <input type="hidden" name="_method" value="PUT" th:if="${motoForm.id != null}">
+                                <input type="hidden" th:field="*{id}" th:if="${motoForm.id != null}">
                                 
                                 <div class="row g-3">
                                     <!-- Placa -->
