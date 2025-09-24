@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motoristas - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --secondary-green: #15803d;
+            --light-green: #dcfce7;
+            --success-green: #22c55e;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            background: var(--light-green);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+        }
+
+        .stats-card .icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .stats-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card .label {
+            color: var(--gray-500);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-green);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            background: var(--white);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .table thead {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-green);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+        }
+
+        .badge {
+            border: 1px solid var(--black);
+            font-weight: 600;
+        }
+
+        .badge.bg-success { background: var(--success-green) !important; }
+        .badge.bg-danger { background: #dc2626 !important; }
+        .badge.bg-warning { background: #eab308 !important; color: var(--black) !important; }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-success {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            color: #14532d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-house me-1"></i>Dashboard
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="mb-1">
+                            <i class="bi bi-people me-3"></i>Gestão de Motoristas
+                        </h1>
+                        <p class="mb-0">Controle completo dos condutores da frota</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="/motoristas/novo" class="btn btn-primary btn-lg" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                            <i class="bi bi-person-plus me-2"></i>Novo Motorista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Alerts -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${message}">Mensagem de sucesso</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="number">5</div>
+                        <div class="label">Total</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="number">4</div>
+                        <div class="label">Ativos</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <div class="number">4</div>
+                        <div class="label">CNH Válida</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+                        <div class="number">1</div>
+                        <div class="label">Com Moto</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-funnel me-2"></i>Filtros de Busca
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{/motoristas}">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" th:value="${nome}" placeholder="João Silva">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" th:value="${cpf}" placeholder="000.000.000-00">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="ativo" class="form-label">Status</label>
+                                <select class="form-select" id="ativo" name="ativo">
+                                    <option value="">Todos</option>
+                                    <option value="true" th:selected="${ativo == true}">Ativo</option>
+                                    <option value="false" th:selected="${ativo == false}">Inativo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-search me-1"></i>Filtrar
+                                </button>
+                                <a href="/motoristas" class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Motoristas Table -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-list me-2"></i>Lista de Motoristas
+                    </span>
+                    <span class="badge bg-primary">5 motoristas encontrados</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-person me-1"></i>Nome</th>
+                                    <th><i class="bi bi-card-text me-1"></i>CPF</th>
+                                    <th><i class="bi bi-credit-card me-1"></i>CNH</th>
+                                    <th><i class="bi bi-calendar me-1"></i>Validade</th>
+                                    <th><i class="bi bi-telephone me-1"></i>Telefone</th>
+                                    <th><i class="bi bi-info-circle me-1"></i>Status</th>
+                                    <th><i class="bi bi-gear me-1"></i>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dados de exemplo -->
+                                <tr>
+                                    <td><strong>João Silva Santos</strong></td>
+                                    <td>123.456.789-00</td>
+                                    <td>12345678901</td>
+                                    <td>15/08/2025</td>
+                                    <td>(11) 99999-9999</td>
+                                    <td><span class="badge bg-success">ATIVO</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motoristas/1/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes/nova?motoristaId=1" class="btn btn-success">
+                                                <i class="bi bi-bicycle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Maria Oliveira</strong></td>
+                                    <td>987.654.321-00</td>
+                                    <td>98765432109</td>
+                                    <td>22/12/2024</td>
+                                    <td>(11) 88888-8888</td>
+                                    <td><span class="badge bg-success">ATIVO</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motoristas/2/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <span class="btn btn-warning disabled">
+                                                <i class="bi bi-bicycle"></i> Com Moto
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pedro Costa</strong></td>
+                                    <td>456.789.123-00</td>
+                                    <td>45678912345</td>
+                                    <td>10/03/2025</td>
+                                    <td>(11) 77777-7777</td>
+                                    <td><span class="badge bg-success">ATIVO</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motoristas/3/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes/nova?motoristaId=3" class="btn btn-success">
+                                                <i class="bi bi-bicycle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ana Santos</strong></td>
+                                    <td>789.123.456-00</td>
+                                    <td>78912345678</td>
+                                    <td>05/07/2025</td>
+                                    <td>(11) 66666-6666</td>
+                                    <td><span class="badge bg-success">ATIVO</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motoristas/4/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes/nova?motoristaId=4" class="btn btn-success">
+                                                <i class="bi bi-bicycle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carlos Pereira</strong></td>
+                                    <td>321.654.987-00</td>
+                                    <td>32165498765</td>
+                                    <td><span class="text-danger">05/01/2024</span></td>
+                                    <td>(11) 55555-5555</td>
+                                    <td><span class="badge bg-danger">CNH VENCIDA</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motoristas/5/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <span class="btn btn-secondary disabled">
+                                                <i class="bi bi-lock"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-3 mt-4">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-person-plus text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5>Novo Motorista</h5>
+                            <p class="text-muted">Cadastrar novo condutor</p>
+                            <a href="/motoristas/novo" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                Cadastrar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-arrow-left-right text-success mb-3" style="font-size: 3rem;"></i>
+                            <h5>Nova Alocação</h5>
+                            <p class="text-muted">Alocar moto para motorista</p>
+                            <a href="/alocacoes/nova" class="btn btn-success">
+                                Alocar Moto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-check text-warning mb-3" style="font-size: 3rem;"></i>
+                            <h5>CNH Vencendo</h5>
+                            <p class="text-muted">1 CNH vence em 30 dias</p>
+                            <a href="/motoristas?vencimento=30" class="btn btn-warning">
+                                Verificar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pátios - Mottu Fleet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>🏢 Pátios</h1>
+    
+    <a href="/">← Voltar ao Dashboard</a>
+    
+    <h3>Lista de Pátios:</h3>
+    
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Endereço</th>
+                <th>Capacidade</th>
+                <th>Observações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="patio : ${patios.content}">
+                <td th:text="${patio.nome}">Centro</td>
+                <td th:text="${patio.endereco}">Rua das Flores, 123</td>
+                <td th:text="${patio.capacidadeOpcional}">50</td>
+                <td th:text="${patio.observacoes}">Pátio principal</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(patios.content)}">
+                <td colspan="4">Nenhum pátio encontrado</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Total de pátios: <span th:text="${patios.totalElements}">0</span></p>
+</body>
+</html>

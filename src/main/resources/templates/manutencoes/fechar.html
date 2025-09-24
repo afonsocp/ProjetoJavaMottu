@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fechar Manutenção - Mottu Fleet</title>
+    <meta charset="UTF-8">
+    <style>
+        .form-container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .error { color: red; font-size: 0.9em; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+        .info-box { background: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .success-box { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>✅ Fechar Manutenção</h1>
+        
+        <div class="info-box">
+            <h3>📋 Dados da Manutenção</h3>
+            <p><strong>Moto:</strong> <span th:text="${manutencao.moto.placa} + ' - ' + ${manutencao.moto.modelo}">ABC1234 - Honda CG 160</span></p>
+            <p><strong>Motivo:</strong> <span th:text="${manutencao.motivo}">Manutenção preventiva</span></p>
+            <p><strong>Aberto em:</strong> <span th:text="${#temporals.format(manutencao.abertoEm, 'dd/MM/yyyy HH:mm')}">10/01/2024 14:30</span></p>
+            <p><strong>Aberto por:</strong> <span th:text="${manutencao.abertoPor}">admin@mottu.com</span></p>
+            <p th:if="${manutencao.observacoes}"><strong>Observações:</strong> <span th:text="${manutencao.observacoes}">Observações iniciais</span></p>
+        </div>
+        
+        <div class="success-box">
+            <strong>✅ Finalizando Manutenção:</strong> Após fechar, a moto ficará <strong>DISPONÍVEL</strong> 
+            novamente para alocações.
+        </div>
+        
+        <form th:action="@{/manutencoes/{id}/fechar(id=${manutencao.id})}" th:object="${manutencaoFechamentoForm}" method="post">
+            
+            <div class="form-group">
+                <label for="observacoes">Observações Finais:</label>
+                <textarea th:field="*{observacoes}" id="observacoes" rows="4" 
+                          placeholder="Descreva os serviços realizados, peças trocadas, condições finais da moto, etc." required></textarea>
+                <div class="error" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn" style="background: #28a745;">✅ Fechar Manutenção</button>
+                <a href="/manutencoes" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

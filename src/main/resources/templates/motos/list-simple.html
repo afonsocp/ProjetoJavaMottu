@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motos - Mottu Fleet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>🏍️ Motos</h1>
+    
+    <a href="/">← Voltar ao Dashboard</a>
+    
+    <h3>Lista de Motos:</h3>
+    
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Ano</th>
+                <th>KM Atual</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="moto : ${motos.content}">
+                <td th:text="${moto.placa}">ABC1234</td>
+                <td th:text="${moto.modelo}">Honda CG 160</td>
+                <td th:text="${moto.ano}">2023</td>
+                <td th:text="${moto.kmAtual}">15000</td>
+                <td th:text="${moto.status}">DISPONIVEL</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(motos.content)}">
+                <td colspan="5">Nenhuma moto encontrada</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Total de motos: <span th:text="${motos.totalElements}">0</span></p>
+</body>
+</html>

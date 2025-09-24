@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motos - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --secondary-green: #15803d;
+            --light-green: #dcfce7;
+            --medium-green: #bbf7d0;
+            --dark-green: #14532d;
+            --success-green: #22c55e;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            background: var(--light-green);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+        }
+
+        .stats-card .icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .stats-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card .label {
+            color: var(--gray-500);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-green);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            background: var(--white);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .table thead {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-green);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+        }
+
+        .badge {
+            border: 1px solid var(--black);
+            font-weight: 600;
+        }
+
+        .badge.bg-success { background: var(--success-green) !important; }
+        .badge.bg-primary { background: var(--primary-green) !important; }
+        .badge.bg-warning { background: #eab308 !important; color: var(--black) !important; }
+        .badge.bg-secondary { background: var(--gray-500) !important; }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-success {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            color: var(--dark-green);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-house me-1"></i>Dashboard
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="mb-1">
+                            <i class="bi bi-bicycle me-3"></i>Gestão de Motos
+                        </h1>
+                        <p class="mb-0">Controle completo da frota de motocicletas</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="/motos/novo" class="btn btn-primary btn-lg" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                            <i class="bi bi-plus-circle me-2"></i>Nova Moto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Alerts -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${message}">Mensagem de sucesso</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+                        <div class="number">4</div>
+                        <div class="label">Total</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="number">2</div>
+                        <div class="label">Disponíveis</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="number">1</div>
+                        <div class="label">Alocadas</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <div class="number">1</div>
+                        <div class="label">Manutenção</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-funnel me-2"></i>Filtros de Busca
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{/motos}">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="placa" class="form-label">Placa</label>
+                                <input type="text" class="form-control" id="placa" name="placa" th:value="${placa}" placeholder="ABC1234">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="modelo" class="form-label">Modelo</label>
+                                <input type="text" class="form-control" id="modelo" name="modelo" th:value="${modelo}" placeholder="Honda CG">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">Todos os status</option>
+                                    <option th:each="s : ${statusOptions}" 
+                                            th:value="${s}" 
+                                            th:text="${s.name()}"
+                                            th:selected="${s == status}">Status</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-search me-1"></i>Filtrar
+                                </button>
+                                <a href="/motos" class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Motos Table -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-list me-2"></i>Lista de Motos
+                    </span>
+                    <span class="badge bg-primary">4 motos encontradas</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-tag me-1"></i>Placa</th>
+                                    <th><i class="bi bi-bicycle me-1"></i>Modelo</th>
+                                    <th><i class="bi bi-calendar me-1"></i>Ano</th>
+                                    <th><i class="bi bi-speedometer2 me-1"></i>KM</th>
+                                    <th><i class="bi bi-info-circle me-1"></i>Status</th>
+                                    <th><i class="bi bi-gear me-1"></i>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dados de exemplo -->
+                                <tr>
+                                    <td><strong>ABC1234</strong></td>
+                                    <td>Honda CG 160</td>
+                                    <td>2024</td>
+                                    <td>15,500 km</td>
+                                    <td><span class="badge bg-success">DISPONÍVEL</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motos/1/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes/nova?motoId=1" class="btn btn-success">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                            <a href="/manutencoes/abrir?motoId=1" class="btn btn-warning">
+                                                <i class="bi bi-tools"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XYZ9876</strong></td>
+                                    <td>Yamaha Factor 125</td>
+                                    <td>2023</td>
+                                    <td>8,200 km</td>
+                                    <td><span class="badge bg-primary">ALOCADA</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motos/2/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <span class="btn btn-secondary disabled">
+                                                <i class="bi bi-lock"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DEF5678</strong></td>
+                                    <td>Honda Biz 125</td>
+                                    <td>2023</td>
+                                    <td>12,800 km</td>
+                                    <td><span class="badge bg-warning text-dark">MANUTENÇÃO</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motos/3/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <span class="btn btn-secondary disabled">
+                                                <i class="bi bi-tools"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GHI9012</strong></td>
+                                    <td>Yamaha XTZ 150</td>
+                                    <td>2024</td>
+                                    <td>3,500 km</td>
+                                    <td><span class="badge bg-success">DISPONÍVEL</span></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/motos/4/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes/nova?motoId=4" class="btn btn-success">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                            <a href="/manutencoes/abrir?motoId=4" class="btn btn-warning">
+                                                <i class="bi bi-tools"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-3 mt-4">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-plus-circle text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5>Nova Moto</h5>
+                            <p class="text-muted">Adicionar nova moto à frota</p>
+                            <a href="/motos/novo" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                Cadastrar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-arrow-left-right text-success mb-3" style="font-size: 3rem;"></i>
+                            <h5>Nova Alocação</h5>
+                            <p class="text-muted">Alocar moto para motorista</p>
+                            <a href="/alocacoes/nova" class="btn btn-success">
+                                Alocar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-tools text-warning mb-3" style="font-size: 3rem;"></i>
+                            <h5>Manutenção</h5>
+                            <p class="text-muted">Abrir ordem de serviço</p>
+                            <a href="/manutencoes/abrir" class="btn btn-warning">
+                                Abrir OS
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

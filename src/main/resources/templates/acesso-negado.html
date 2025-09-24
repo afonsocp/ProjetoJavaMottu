@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="layout :: layout(~{::title}, ~{::content})">
+<head>
+    <title>Acesso Negado</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-shield-exclamation text-danger" style="font-size: 8rem;"></i>
+            </div>
+            
+            <h1 class="display-4 text-danger mb-3">Acesso Negado</h1>
+            <p class="lead text-muted mb-4">
+                Você não tem permissão para acessar esta página.
+            </p>
+            
+            <div class="alert alert-warning d-inline-block">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Seu perfil atual:</strong>
+                <span class="badge bg-primary ms-2" sec:authorize="hasRole('ADMIN')">🔑 ADMIN</span>
+                <span class="badge bg-success ms-2" sec:authorize="hasRole('GERENTE')">👨‍💼 GERENTE</span>
+                <span class="badge bg-warning ms-2" sec:authorize="hasRole('OPERADOR')">👷 OPERADOR</span>
+            </div>
+            
+            <div class="mt-4">
+                <a href="/" class="btn btn-primary btn-lg me-3">
+                    <i class="bi bi-house me-2"></i>Voltar ao Dashboard
+                </a>
+                <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+            
+            <div class="mt-5">
+                <h5>Permissões por Perfil:</h5>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row text-start">
+                                    <div class="col-md-4">
+                                        <h6 class="text-primary">🔑 ADMIN</h6>
+                                        <ul class="list-unstyled small">
+                                            <li>✅ Acesso total</li>
+                                            <li>✅ Criar/Editar/Deletar</li>
+                                            <li>✅ Gerenciar usuários</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="text-success">👨‍💼 GERENTE</h6>
+                                        <ul class="list-unstyled small">
+                                            <li>✅ CRUD (sem deletar)</li>
+                                            <li>✅ Fluxos operacionais</li>
+                                            <li>❌ Não pode deletar</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="text-warning">👷 OPERADOR</h6>
+                                        <ul class="list-unstyled small">
+                                            <li>✅ Alocações</li>
+                                            <li>✅ Manutenções</li>
+                                            <li>❌ Não pode criar/editar</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #16a34a;
+            --secondary-color: #15803d;
+            --success-color: #22c55e;
+            --warning-color: #eab308;
+            --danger-color: #dc2626;
+            --dark-color: #000000;
+            --light-green: #dcfce7;
+            --medium-green: #bbf7d0;
+        }
+
+        body {
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .badge-role {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            height: 100%;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .stats-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .stats-card .number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card .label {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: none;
+            height: 100%;
+            display: block;
+        }
+
+        .menu-card:hover {
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .menu-card .icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .menu-card h4 {
+            color: var(--dark-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-card p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .action-card .icon {
+            color: white;
+        }
+
+        .action-card h4, .action-card p {
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center text-white" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span sec:authentication="name">Usuario</span>
+                        <span class="badge bg-light text-primary badge-role" 
+                              sec:authorize="hasRole('ADMIN')">🔑 ADMIN</span>
+                        <span class="badge bg-light text-success badge-role" 
+                              sec:authorize="hasRole('GERENTE')">👨‍💼 GERENTE</span>
+                        <span class="badge bg-light text-warning badge-role" 
+                              sec:authorize="hasRole('OPERADOR')">👷 OPERADOR</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>🏍️ Dashboard NeoMoto</h1>
+            <p>Sistema Profissional de Gestão de Frotas</p>
+        </div>
+
+        <!-- Statistics -->
+        <h2 class="section-title">📊 Estatísticas da Frota</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="icon">
+                        <i class="bi bi-bicycle"></i>
+                    </div>
+                    <div class="number" th:text="${totalMotos}">4</div>
+                    <div class="label">Total Motos</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="number" th:text="${totalMotoristas}">3</div>
+                    <div class="label">Motoristas</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="icon">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <div class="number" th:text="${alocacoesAtivas}">1</div>
+                    <div class="label">Alocações Ativas</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <div class="icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <div class="number" th:text="${manutencoesAbertas}">1</div>
+                    <div class="label">Manutenções</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Principal -->
+        <h2 class="section-title">🎯 Menu Principal</h2>
+        <div class="row g-4 mb-5">
+            <!-- Gestão - ADMIN e GERENTE -->
+            <div class="col-lg-3 col-md-6" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                <a href="/motos" class="menu-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+                        <h4>Motos</h4>
+                        <p>Gerenciar frota de motocicletas</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                <a href="/motoristas" class="menu-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h4>Motoristas</h4>
+                        <p>Cadastro de condutores</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                <a href="/patios" class="menu-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h4>Pátios</h4>
+                        <p>Locais de operação</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Operações - Todos -->
+            <div class="col-lg-3 col-md-6">
+                <a href="/alocacoes" class="menu-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+                        <h4>Alocações</h4>
+                        <p>Alocar e devolver motos</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <a href="/manutencoes" class="menu-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <h4>Manutenções</h4>
+                        <p>Abrir e fechar serviços</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Ação Rápida -->
+            <div class="col-lg-3 col-md-6">
+                <a href="/alocacoes/nova" class="menu-card action-card">
+                    <div class="text-center">
+                        <div class="icon">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <h4>Nova Alocação</h4>
+                        <p>Ação rápida</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Visualização para OPERADOR -->
+            <div class="col-lg-3 col-md-6" sec:authorize="hasRole('OPERADOR')">
+                <a href="/motos" class="menu-card" style="border: 2px dashed #d1d5db;">
+                    <div class="text-center">
+                        <div class="icon" style="color: #6b7280;">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                        <h4 style="color: #6b7280;">Ver Motos</h4>
+                        <p>Consulta apenas</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3 col-md-6" sec:authorize="hasRole('OPERADOR')">
+                <a href="/motoristas" class="menu-card" style="border: 2px dashed #d1d5db;">
+                    <div class="text-center">
+                        <div class="icon" style="color: #6b7280;">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                        <h4 style="color: #6b7280;">Ver Motoristas</h4>
+                        <p>Consulta apenas</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

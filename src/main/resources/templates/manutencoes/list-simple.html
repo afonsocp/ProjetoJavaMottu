@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manutenções - Mottu Fleet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>🔧 Manutenções</h1>
+    
+    <a href="/">← Voltar ao Dashboard</a>
+    
+    <h3>Lista de Manutenções:</h3>
+    
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>Moto</th>
+                <th>Motivo</th>
+                <th>Aberto em</th>
+                <th>Aberto por</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="manutencao : ${manutencoes.content}">
+                <td th:text="${manutencao.moto.placa}">ABC1234</td>
+                <td th:text="${manutencao.motivo}">Manutenção preventiva</td>
+                <td th:text="${manutencao.abertoEm}">2024-01-10</td>
+                <td th:text="${manutencao.abertoPor}">admin@mottu.com</td>
+                <td th:text="${manutencao.status}">ABERTA</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(manutencoes.content)}">
+                <td colspan="5">Nenhuma manutenção encontrada</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Total de manutenções: <span th:text="${manutencoes.totalElements}">0</span></p>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${patio.id != null ? 'Editar' : 'Novo'} + ' Pátio - NeoMoto'">Novo Pátio - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --secondary-green: #15803d;
+            --light-green: #dcfce7;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-green);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+        }
+
+        .form-label {
+            color: var(--black);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-500);
+            border: 2px solid var(--black);
+            color: var(--white);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            background: var(--white);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+
+        .is-invalid {
+            border-color: #dc2626 !important;
+        }
+
+        .invalid-feedback {
+            color: #dc2626;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/patios">
+                    <i class="bi bi-arrow-left me-1"></i>Voltar
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-1">
+                            <i class="bi bi-building me-3"></i>
+                            <span th:text="${patio.id != null ? 'Editar' : 'Novo'} + ' Pátio'">Novo Pátio</span>
+                        </h1>
+                        <p class="mb-0">Cadastro e edição de pátios de operação</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/patios" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar à Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-building me-2"></i>
+                            <span th:text="${patio.id != null ? 'Editar Pátio' : 'Novo Pátio'}">Novo Pátio</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Alerts -->
+                            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Erro!</strong> Corrija os campos abaixo:
+                                <ul class="mb-0 mt-2">
+                                    <li th:each="error : ${#fields.allErrors()}" th:text="${error}">Erro</li>
+                                </ul>
+                            </div>
+
+                            <form th:action="${patio.id != null ? '/patios/' + patio.id : '/patios'}" 
+                                  method="POST" 
+                                  th:object="${patioForm}">
+                                <input type="hidden" name="_method" th:value="${patio.id != null ? 'PUT' : 'POST'}" th:if="${patio.id != null}">
+                                
+                                <div class="row g-3">
+                                    <!-- Nome -->
+                                    <div class="col-md-6">
+                                        <label for="nome" class="form-label">
+                                            <i class="bi bi-building me-1"></i>Nome do Pátio *
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{nome}" 
+                                               th:class="${#fields.hasErrors('nome')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="nome" 
+                                               placeholder="Pátio Centro" 
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">
+                                            Erro no nome
+                                        </div>
+                                    </div>
+
+                                    <!-- Capacidade -->
+                                    <div class="col-md-6">
+                                        <label for="capacidade" class="form-label">
+                                            <i class="bi bi-bicycle me-1"></i>Capacidade (Motos) *
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               th:field="*{capacidade}" 
+                                               th:class="${#fields.hasErrors('capacidade')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="capacidade" 
+                                               placeholder="15" 
+                                               min="1"
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('capacidade')}" th:errors="*{capacidade}">
+                                            Erro na capacidade
+                                        </div>
+                                        <div class="form-text">Número máximo de motos que o pátio comporta</div>
+                                    </div>
+
+                                    <!-- Endereço -->
+                                    <div class="col-md-12">
+                                        <label for="endereco" class="form-label">
+                                            <i class="bi bi-geo-alt me-1"></i>Endereço Completo *
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{endereco}" 
+                                               th:class="${#fields.hasErrors('endereco')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="endereco" 
+                                               placeholder="Rua das Flores, 123 - Centro - São Paulo - SP" 
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}">
+                                            Erro no endereço
+                                        </div>
+                                    </div>
+
+                                    <!-- CEP -->
+                                    <div class="col-md-4">
+                                        <label for="cep" class="form-label">
+                                            <i class="bi bi-mailbox me-1"></i>CEP
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{cep}" 
+                                               id="cep" 
+                                               placeholder="01000-000"
+                                               maxlength="9">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- Telefone -->
+                                    <div class="col-md-4">
+                                        <label for="telefone" class="form-label">
+                                            <i class="bi bi-telephone me-1"></i>Telefone
+                                        </label>
+                                        <input type="tel" 
+                                               class="form-control" 
+                                               th:field="*{telefone}" 
+                                               id="telefone" 
+                                               placeholder="(11) 3333-3333">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- Responsável -->
+                                    <div class="col-md-4">
+                                        <label for="responsavel" class="form-label">
+                                            <i class="bi bi-person-badge me-1"></i>Responsável
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{responsavel}" 
+                                               id="responsavel" 
+                                               placeholder="José Silva">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- Horário de Funcionamento -->
+                                    <div class="col-md-6">
+                                        <label for="horarioFuncionamento" class="form-label">
+                                            <i class="bi bi-clock me-1"></i>Horário de Funcionamento
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{horarioFuncionamento}" 
+                                               id="horarioFuncionamento" 
+                                               placeholder="Segunda a Sexta: 7h às 18h">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-6 d-flex align-items-end">
+                                        <div class="form-check">
+                                            <input type="checkbox" 
+                                                   class="form-check-input" 
+                                                   th:field="*{ativo}" 
+                                                   id="ativo">
+                                            <label class="form-check-label" for="ativo">
+                                                <i class="bi bi-building-check me-1"></i>
+                                                Pátio ativo
+                                            </label>
+                                            <div class="form-text">Desmarque para desativar o pátio</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Observações -->
+                                    <div class="col-12">
+                                        <label for="observacoes" class="form-label">
+                                            <i class="bi bi-chat-text me-1"></i>Observações
+                                        </label>
+                                        <textarea class="form-control" 
+                                                  th:field="*{observacoes}" 
+                                                  id="observacoes" 
+                                                  rows="3" 
+                                                  placeholder="Informações adicionais sobre o pátio, segurança, acesso, etc..."></textarea>
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/patios" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <span th:text="${patio.id != null ? 'Atualizar' : 'Salvar'} + ' Pátio'">Salvar Pátio</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-format CEP input
+        document.getElementById('cep').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 8) value = value.substring(0, 8);
+            
+            if (value.length === 8) {
+                value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Auto-format telefone input
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            
+            if (value.length === 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length === 10) {
+                value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            }
+            
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

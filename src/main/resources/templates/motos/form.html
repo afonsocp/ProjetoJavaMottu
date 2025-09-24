@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${moto.id != null ? 'Editar' : 'Nova'} + ' Moto - NeoMoto'">Nova Moto - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --secondary-green: #15803d;
+            --light-green: #dcfce7;
+            --success-green: #22c55e;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-green);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+        }
+
+        .form-label {
+            color: var(--black);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-500);
+            border: 2px solid var(--black);
+            color: var(--white);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            background: var(--white);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+
+        .is-invalid {
+            border-color: #dc2626 !important;
+        }
+
+        .invalid-feedback {
+            color: #dc2626;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/motos">
+                    <i class="bi bi-arrow-left me-1"></i>Voltar
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-1">
+                            <i class="bi bi-bicycle me-3"></i>
+                            <span th:text="${moto.id != null ? 'Editar' : 'Nova'} + ' Motocicleta'">Nova Motocicleta</span>
+                        </h1>
+                        <p class="mb-0">Cadastro e edição de motocicletas da frota</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/motos" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar à Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-bicycle me-2"></i>
+                            <span th:text="${moto.id != null ? 'Editar Motocicleta' : 'Nova Motocicleta'}">Nova Motocicleta</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Alerts -->
+                            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Erro!</strong> Corrija os campos abaixo:
+                                <ul class="mb-0 mt-2">
+                                    <li th:each="error : ${#fields.allErrors()}" th:text="${error}">Erro</li>
+                                </ul>
+                            </div>
+
+                            <form th:action="${moto.id != null ? '/motos/' + moto.id : '/motos'}" 
+                                  method="POST" 
+                                  th:object="${motoForm}">
+                                <input type="hidden" name="_method" th:value="${moto.id != null ? 'PUT' : 'POST'}" th:if="${moto.id != null}">
+                                
+                                <div class="row g-3">
+                                    <!-- Placa -->
+                                    <div class="col-md-6">
+                                        <label for="placa" class="form-label">
+                                            <i class="bi bi-tag me-1"></i>Placa *
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{placa}" 
+                                               th:class="${#fields.hasErrors('placa')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="placa" 
+                                               placeholder="ABC1234" 
+                                               maxlength="7" 
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('placa')}" th:errors="*{placa}">
+                                            Erro na placa
+                                        </div>
+                                        <div class="form-text">Formato: ABC1234 (3 letras + 4 números)</div>
+                                    </div>
+
+                                    <!-- Modelo -->
+                                    <div class="col-md-6">
+                                        <label for="modelo" class="form-label">
+                                            <i class="bi bi-bicycle me-1"></i>Modelo *
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{modelo}" 
+                                               th:class="${#fields.hasErrors('modelo')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="modelo" 
+                                               placeholder="Honda CG 160" 
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('modelo')}" th:errors="*{modelo}">
+                                            Erro no modelo
+                                        </div>
+                                    </div>
+
+                                    <!-- Ano -->
+                                    <div class="col-md-6">
+                                        <label for="ano" class="form-label">
+                                            <i class="bi bi-calendar me-1"></i>Ano *
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               th:field="*{ano}" 
+                                               th:class="${#fields.hasErrors('ano')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="ano" 
+                                               placeholder="2024" 
+                                               min="2000" 
+                                               max="2030" 
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('ano')}" th:errors="*{ano}">
+                                            Erro no ano
+                                        </div>
+                                    </div>
+
+                                    <!-- KM Atual -->
+                                    <div class="col-md-6">
+                                        <label for="kmAtual" class="form-label">
+                                            <i class="bi bi-speedometer2 me-1"></i>KM Atual
+                                        </label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               th:field="*{kmAtual}" 
+                                               th:class="${#fields.hasErrors('kmAtual')} ? 'form-control is-invalid' : 'form-control'"
+                                               id="kmAtual" 
+                                               placeholder="15000" 
+                                               min="0">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('kmAtual')}" th:errors="*{kmAtual}">
+                                            Erro no KM
+                                        </div>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-6">
+                                        <label for="status" class="form-label">
+                                            <i class="bi bi-info-circle me-1"></i>Status *
+                                        </label>
+                                        <select class="form-select" 
+                                                th:field="*{status}" 
+                                                th:class="${#fields.hasErrors('status')} ? 'form-select is-invalid' : 'form-select'"
+                                                id="status" 
+                                                required>
+                                            <option value="">Selecione o status</option>
+                                            <option value="DISPONIVEL">Disponível</option>
+                                            <option value="ALOCADA">Alocada</option>
+                                            <option value="MANUTENCAO">Manutenção</option>
+                                            <option value="INATIVA">Inativa</option>
+                                        </select>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">
+                                            Erro no status
+                                        </div>
+                                    </div>
+
+                                    <!-- Chassi -->
+                                    <div class="col-md-6">
+                                        <label for="chassi" class="form-label">
+                                            <i class="bi bi-hash me-1"></i>Chassi
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{chassi}" 
+                                               id="chassi" 
+                                               placeholder="9BWHE21JX24060831">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- RENAVAM -->
+                                    <div class="col-md-6">
+                                        <label for="renavam" class="form-label">
+                                            <i class="bi bi-file-text me-1"></i>RENAVAM
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               th:field="*{renavam}" 
+                                               id="renavam" 
+                                               placeholder="12345678901">
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+
+                                    <!-- Observações -->
+                                    <div class="col-12">
+                                        <label for="observacoes" class="form-label">
+                                            <i class="bi bi-chat-text me-1"></i>Observações
+                                        </label>
+                                        <textarea class="form-control" 
+                                                  th:field="*{observacoes}" 
+                                                  id="observacoes" 
+                                                  rows="3" 
+                                                  placeholder="Informações adicionais sobre a motocicleta..."></textarea>
+                                        <div class="form-text">Opcional</div>
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/motos" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <span th:text="${moto.id != null ? 'Atualizar' : 'Salvar'} + ' Motocicleta'">Salvar Motocicleta</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-format placa input
+        document.getElementById('placa').addEventListener('input', function(e) {
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (value.length > 7) value = value.substring(0, 7);
+            e.target.value = value;
+        });
+        
+        // Auto-format chassi input
+        document.getElementById('chassi').addEventListener('input', function(e) {
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

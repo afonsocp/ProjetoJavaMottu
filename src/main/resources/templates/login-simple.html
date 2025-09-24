@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - NeoMoto</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .btn:hover { background: #0056b3; }
+        .error { color: red; margin: 10px 0; }
+        .success { color: green; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🏍️ NeoMoto - Login</h1>
+    
+    <div th:if="${param.error}" class="error">
+        Login inválido. Tente novamente.
+    </div>
+    
+    <div th:if="${param.logout}" class="success">
+        Logout realizado com sucesso.
+    </div>
+    
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="username">E-mail:</label>
+            <input type="email" id="username" name="username" value="admin@mottu.com" required />
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" value="admin123" required />
+        </div>
+        
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+    
+    <div style="margin-top: 20px; text-align: center; color: #6c757d;">
+        <small>
+            <strong>Usuários de teste:</strong><br>
+            🔑 <strong>ADMIN:</strong> admin@neomoto.com / admin123<br>
+            👨‍💼 <strong>GERENTE:</strong> gerente@neomoto.com / gerente123<br>
+            👷 <strong>OPERADOR:</strong> operador@neomoto.com / operador123
+        </small>
+    </div>
+</body>
+</html>

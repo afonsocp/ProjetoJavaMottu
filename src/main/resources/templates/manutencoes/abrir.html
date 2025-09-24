@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Abrir Manutenção - Mottu Fleet</title>
+    <meta charset="UTF-8">
+    <style>
+        .form-container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .error { color: red; font-size: 0.9em; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+        .warning-box { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🔧 Abrir Manutenção</h1>
+        
+        <div class="warning-box">
+            <strong>⚠️ Atenção:</strong> Ao abrir uma manutenção, a moto ficará <strong>INDISPONÍVEL</strong> 
+            para novas alocações até que a manutenção seja fechada.
+        </div>
+        
+        <form th:action="@{/manutencoes/abrir}" th:object="${manutencaoAberturaForm}" method="post">
+            
+            <div class="form-group">
+                <label for="motoId">Moto:</label>
+                <select th:field="*{motoId}" id="motoId" required>
+                    <option value="">Selecione uma moto</option>
+                    <option th:each="moto : ${motosDisponiveis}" 
+                            th:value="${moto.id}" 
+                            th:text="${moto.placa} + ' - ' + ${moto.modelo} + ' (Status: ' + ${moto.status} + ')'"
+                            th:selected="${moto.id == manutencaoAberturaForm.motoId}">
+                        ABC1234 - Honda CG 160 (Status: DISPONIVEL)
+                    </option>
+                </select>
+                <div class="error" th:if="${#fields.hasErrors('motoId')}" th:errors="*{motoId}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="motivo">Motivo da Manutenção:</label>
+                <input type="text" th:field="*{motivo}" id="motivo" 
+                       placeholder="Ex: Manutenção preventiva, Troca de óleo, Reparo de freios" required />
+                <div class="error" th:if="${#fields.hasErrors('motivo')}" th:errors="*{motivo}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações (opcional):</label>
+                <textarea th:field="*{observacoes}" id="observacoes" rows="4" 
+                          placeholder="Descreva detalhes adicionais sobre o problema ou serviço necessário"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn" style="background: #dc3545;">🔧 Abrir Manutenção</button>
+                <a href="/manutencoes" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motoristas - Mottu Fleet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>👨‍💼 Motoristas</h1>
+    
+    <a href="/">← Voltar ao Dashboard</a>
+    
+    <h3>Lista de Motoristas:</h3>
+    
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>CNH</th>
+                <th>Validade CNH</th>
+                <th>Ativo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="motorista : ${motoristas.content}">
+                <td th:text="${motorista.nome}">João Silva</td>
+                <td th:text="${motorista.cpf}">12345678901</td>
+                <td th:text="${motorista.cnh}">12345678901</td>
+                <td th:text="${motorista.validadeCnh}">2025-12-31</td>
+                <td th:text="${motorista.ativo}">true</td>
+            </tr>
+            <!-- Fallback se não houver dados -->
+            <tr th:if="${#lists.isEmpty(motoristas.content)}">
+                <td colspan="5">Nenhum motorista encontrado</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Total de motoristas: <span th:text="${motoristas.totalElements}">0</span></p>
+</body>
+</html>

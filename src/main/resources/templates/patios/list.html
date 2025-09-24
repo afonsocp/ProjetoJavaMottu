@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pátios - NeoMoto</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --secondary-green: #15803d;
+            --light-green: #dcfce7;
+            --success-green: #22c55e;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-500: #6b7280;
+        }
+
+        body {
+            background: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--black);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--black);
+        }
+
+        .page-header {
+            background: var(--white);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            background: var(--light-green);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+        }
+
+        .stats-card .icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .stats-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card .label {
+            color: var(--gray-500);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .card {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--primary-green);
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            border: 2px solid var(--black);
+            color: var(--white);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            background: var(--white);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .table thead {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid var(--black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light-green);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--black);
+            border-radius: 8px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+        }
+
+        .badge {
+            border: 1px solid var(--black);
+            font-weight: 600;
+        }
+
+        .badge.bg-success { background: var(--success-green) !important; }
+        .badge.bg-primary { background: var(--primary-green) !important; }
+        .badge.bg-warning { background: #eab308 !important; color: var(--black) !important; }
+
+        .alert {
+            border: 2px solid var(--black);
+            border-radius: 12px;
+        }
+
+        .alert-success {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            color: #14532d;
+        }
+
+        .patio-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .patio-card:hover {
+            transform: translateY(-5px);
+            background: var(--light-green);
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.2);
+        }
+
+        .patio-card .icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .patio-card h5 {
+            color: var(--black);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .patio-card .info {
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-speedometer2 me-2"></i>
+                NeoMoto
+            </a>
+            
+            <div class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-house me-1"></i>Dashboard
+                </a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="mb-1">
+                            <i class="bi bi-building me-3"></i>Gestão de Pátios
+                        </h1>
+                        <p class="mb-0">Locais de operação e armazenamento da frota</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="/patios/novo" class="btn btn-primary btn-lg" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                            <i class="bi bi-plus-square me-2"></i>Novo Pátio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Alerts -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${message}">Mensagem de sucesso</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <div class="number">3</div>
+                        <div class="label">Total Pátios</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+                        <div class="number">4</div>
+                        <div class="label">Motos Total</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+                        <div class="number">12</div>
+                        <div class="label">Movimentações</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div class="number">2</div>
+                        <div class="label">Regiões</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-funnel me-2"></i>Filtros de Busca
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{/patios}">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="nome" class="form-label">Nome do Pátio</label>
+                                <input type="text" class="form-control" id="nome" name="nome" th:value="${nome}" placeholder="Centro, Norte, Sul...">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="regiao" class="form-label">Região</label>
+                                <select class="form-select" id="regiao" name="regiao">
+                                    <option value="">Todas as regiões</option>
+                                    <option value="centro">Centro</option>
+                                    <option value="norte">Norte</option>
+                                    <option value="sul">Sul</option>
+                                    <option value="leste">Leste</option>
+                                    <option value="oeste">Oeste</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-search me-1"></i>Filtrar
+                                </button>
+                                <a href="/patios" class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Pátios Grid -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="patio-card">
+                        <div class="text-center">
+                            <div class="icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <h5>Pátio Centro</h5>
+                            <div class="info">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                Rua das Flores, 123 - Centro
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-bicycle me-1"></i>
+                                2 motos estacionadas
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-capacity me-1"></i>
+                                Capacidade: 15 motos
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/patios/1/edit" class="btn btn-outline-primary btn-sm" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                    <i class="bi bi-pencil me-1"></i>Editar
+                                </a>
+                                <a href="/alocacoes/nova?patioId=1" class="btn btn-success btn-sm">
+                                    <i class="bi bi-arrow-right me-1"></i>Usar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="patio-card">
+                        <div class="text-center">
+                            <div class="icon">
+                                <i class="bi bi-building-fill"></i>
+                            </div>
+                            <h5>Pátio Norte</h5>
+                            <div class="info">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                Av. Principal, 456 - Zona Norte
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-bicycle me-1"></i>
+                                1 moto estacionada
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-capacity me-1"></i>
+                                Capacidade: 20 motos
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/patios/2/edit" class="btn btn-outline-primary btn-sm" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                    <i class="bi bi-pencil me-1"></i>Editar
+                                </a>
+                                <a href="/alocacoes/nova?patioId=2" class="btn btn-success btn-sm">
+                                    <i class="bi bi-arrow-right me-1"></i>Usar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="patio-card">
+                        <div class="text-center">
+                            <div class="icon">
+                                <i class="bi bi-building-add"></i>
+                            </div>
+                            <h5>Pátio Sul</h5>
+                            <div class="info">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                Rua do Comércio, 789 - Zona Sul
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-bicycle me-1"></i>
+                                1 moto estacionada
+                            </div>
+                            <div class="info">
+                                <i class="bi bi-capacity me-1"></i>
+                                Capacidade: 10 motos
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/patios/3/edit" class="btn btn-outline-primary btn-sm" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                    <i class="bi bi-pencil me-1"></i>Editar
+                                </a>
+                                <a href="/alocacoes/nova?patioId=3" class="btn btn-success btn-sm">
+                                    <i class="bi bi-arrow-right me-1"></i>Usar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Table -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-table me-2"></i>Detalhes dos Pátios
+                    </span>
+                    <span class="badge bg-primary">3 pátios ativos</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-building me-1"></i>Nome</th>
+                                    <th><i class="bi bi-geo-alt me-1"></i>Endereço</th>
+                                    <th><i class="bi bi-bicycle me-1"></i>Motos</th>
+                                    <th><i class="bi bi-capacity me-1"></i>Capacidade</th>
+                                    <th><i class="bi bi-percent me-1"></i>Ocupação</th>
+                                    <th><i class="bi bi-gear me-1"></i>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Pátio Centro</strong></td>
+                                    <td>Rua das Flores, 123 - Centro</td>
+                                    <td><span class="badge bg-primary">2</span></td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 13%"></div>
+                                        </div>
+                                        <small>13%</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/patios/1/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes?patioId=1" class="btn btn-success">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pátio Norte</strong></td>
+                                    <td>Av. Principal, 456 - Zona Norte</td>
+                                    <td><span class="badge bg-primary">1</span></td>
+                                    <td>20</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 5%"></div>
+                                        </div>
+                                        <small>5%</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/patios/2/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes?patioId=2" class="btn btn-success">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pátio Sul</strong></td>
+                                    <td>Rua do Comércio, 789 - Zona Sul</td>
+                                    <td><span class="badge bg-primary">1</span></td>
+                                    <td>10</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 10%"></div>
+                                        </div>
+                                        <small>10%</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/patios/3/edit" class="btn btn-outline-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/alocacoes?patioId=3" class="btn btn-success">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-3 mt-4">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-plus-square text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h5>Novo Pátio</h5>
+                            <p class="text-muted">Cadastrar novo local</p>
+                            <a href="/patios/novo" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                                Cadastrar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-bar-chart text-success mb-3" style="font-size: 3rem;"></i>
+                            <h5>Relatório</h5>
+                            <p class="text-muted">Ocupação dos pátios</p>
+                            <a href="/relatorios/patios" class="btn btn-success">
+                                Ver Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-geo-alt text-warning mb-3" style="font-size: 3rem;"></i>
+                            <h5>Mapa</h5>
+                            <p class="text-muted">Localização dos pátios</p>
+                            <a href="/patios/mapa" class="btn btn-warning">
+                                Ver Mapa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

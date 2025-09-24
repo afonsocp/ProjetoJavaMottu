@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alocações - Mottu Fleet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>🔄 Alocações</h1>
+    
+    <a href="/">← Voltar ao Dashboard</a>
+    
+    <h3>Lista de Alocações:</h3>
+    
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>Moto</th>
+                <th>Motorista</th>
+                <th>Pátio Origem</th>
+                <th>Data Saída</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="alocacao : ${alocacoes.content}">
+                <td th:text="${alocacao.moto.placa}">ABC1234</td>
+                <td th:text="${alocacao.motorista.nome}">João Silva</td>
+                <td th:text="${alocacao.patioOrigem.nome}">Centro</td>
+                <td th:text="${alocacao.dataHoraSaida}">2024-01-15</td>
+                <td th:text="${alocacao.status}">ATIVA</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(alocacoes.content)}">
+                <td colspan="5">Nenhuma alocação encontrada</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Total de alocações: <span th:text="${alocacoes.totalElements}">0</span></p>
+</body>
+</html>
