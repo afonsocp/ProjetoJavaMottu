@@ -16,10 +16,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/motos")
 @RequiredArgsConstructor
-public class MotoController {
+public class MotoController extends BaseController<Moto, MotoForm> {
     
     private final MotoService motoService;
     
@@ -47,9 +49,7 @@ public class MotoController {
     @GetMapping("/novo")
     @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public String createForm(Model model) {
-        model.addAttribute("motoForm", new MotoForm());
-        model.addAttribute("moto", new Moto()); // Para o título do formulário
-        return "motos/form-create-simple";
+        return handleCreateForm(model, new MotoForm(), new Moto(), "motos/form-create-simple");
     }
     
     @PostMapping
@@ -59,19 +59,10 @@ public class MotoController {
                         Model model,
                         RedirectAttributes redirectAttributes) {
         
-        if (result.hasErrors()) {
-            model.addAttribute("moto", new Moto()); // Para o título do formulário
-            return "motos/form";
-        }
-        
-        try {
-            motoService.save(motoForm);
-            redirectAttributes.addFlashAttribute("success", "Moto cadastrada com sucesso!");
-            return "redirect:/motos";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/motos/novo";
-        }
+        return handleCreate(motoForm, result, model, redirectAttributes,
+                          "Moto cadastrada com sucesso!",
+                          "redirect:/motos/novo",
+                          "redirect:/motos");
     }
     
     @GetMapping("/{id}/editar")
@@ -129,5 +120,51 @@ public class MotoController {
         }
         
         return "redirect:/motos";
+    }
+    
+    // Implementação dos métodos abstratos da classe base
+    @Override
+    protected String getFormAttributeName() {
+        return "motoForm";
+    }
+    
+    @Override
+    protected String getEntityAttributeName() {
+        return "moto";
+    }
+    
+    @Override
+    protected String getFormView() {
+        return "motos/form";
+    }
+    
+    @Override
+    protected String getListRedirect() {
+        return "redirect:/motos";
+    }
+    
+    @Override
+    protected Moto createNewEntity() {
+        return new Moto();
+    }
+    
+    @Override
+    protected Optional<Moto> findEntityById(Long id) {
+        return motoService.findById(id);
+    }
+    
+    @Override
+    protected void saveEntity(MotoForm form) {
+        motoService.save(form);
+    }
+    
+    @Override
+    protected void updateEntity(Long id, MotoForm form) {
+        motoService.update(id, form);
+    }
+    
+    @Override
+    protected void deleteEntity(Long id) {
+        motoService.delete(id);
     }
 }

@@ -26,4 +26,6 @@ public interface ManutencaoRepository extends JpaRepository<Manutencao, Long> {
     Page<Manutencao> findByFilters(@Param("motoId") Long motoId, 
                                   @Param("status") Manutencao.StatusManutencao status, 
                                   Pageable pageable);
+    
+    long countByStatus(Manutencao.StatusManutencao status);
 }

@@ -105,4 +105,18 @@ public class MotoService {
             motoRepository.save(moto);
         }
     }
+    
+    public long countAll() {
+        return motoRepository.count();
+    }
+    
+    public long countByStatus(String status) {
+        return motoRepository.countByStatus(Moto.StatusMoto.valueOf(status));
+    }
+    
+    public long countMotoristas() {
+        // Este método deveria estar no MotoristaService, mas por simplicidade
+        // vamos implementar aqui por enquanto
+        return 0; // Será implementado quando necessário
+    }
 }

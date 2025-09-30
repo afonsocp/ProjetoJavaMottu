@@ -31,4 +31,6 @@ public interface AlocacaoRepository extends JpaRepository<Alocacao, Long> {
                                 @Param("motoristaId") Long motoristaId, 
                                 @Param("status") Alocacao.StatusAlocacao status, 
                                 Pageable pageable);
+    
+    long countByStatus(Alocacao.StatusAlocacao status);
 }

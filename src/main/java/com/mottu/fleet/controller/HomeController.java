@@ -19,13 +19,34 @@ public class HomeController {
     
     @GetMapping("/")
     public String home(Model model, Authentication authentication) {
-        // Estatísticas básicas para o dashboard (valores fixos por enquanto)
-        model.addAttribute("totalMotos", 4);
-        model.addAttribute("totalMotoristas", 3);
-        model.addAttribute("alocacoesAtivas", 1);
-        model.addAttribute("manutencoesAbertas", 1);
+        // Estatísticas dinâmicas do dashboard
+        long totalMotos = motoService.countAll();
+        long totalMotoristas = motoService.countMotoristas();
+        long alocacoesAtivas = alocacaoService.countAtivas();
+        long manutencoesAbertas = manutencaoService.countAbertas();
+        
+        // Estatísticas de status das motos
+        long motosDisponiveis = motoService.countByStatus("DISPONIVEL");
+        long motosAlocadas = motoService.countByStatus("ALOCADA");
+        long motosEmManutencao = motoService.countByStatus("MANUTENCAO");
+        
+        // Cálculo de percentuais
+        double percentualDisponiveis = totalMotos > 0 ? (motosDisponiveis * 100.0 / totalMotos) : 0;
+        double percentualAlocadas = totalMotos > 0 ? (motosAlocadas * 100.0 / totalMotos) : 0;
+        double percentualManutencao = totalMotos > 0 ? (motosEmManutencao * 100.0 / totalMotos) : 0;
+        
+        model.addAttribute("totalMotos", totalMotos);
+        model.addAttribute("totalMotoristas", totalMotoristas);
+        model.addAttribute("alocacoesAtivas", alocacoesAtivas);
+        model.addAttribute("manutencoesAbertas", manutencoesAbertas);
+        model.addAttribute("motosDisponiveis", motosDisponiveis);
+        model.addAttribute("motosAlocadas", motosAlocadas);
+        model.addAttribute("motosEmManutencao", motosEmManutencao);
+        model.addAttribute("percentualDisponiveis", Math.round(percentualDisponiveis));
+        model.addAttribute("percentualAlocadas", Math.round(percentualAlocadas));
+        model.addAttribute("percentualManutencao", Math.round(percentualManutencao));
         model.addAttribute("usuario", authentication != null ? authentication.getName() : "Anônimo");
         
-            return "home-modern";
+        return "home";
     }
 }

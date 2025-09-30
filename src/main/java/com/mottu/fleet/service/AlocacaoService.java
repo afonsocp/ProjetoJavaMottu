@@ -48,21 +48,46 @@ public class AlocacaoService {
     }
     
     public Alocacao alocar(AlocacaoForm form) {
-        // Buscar entidades
-        Moto moto = motoService.findById(form.getMotoId())
-                .orElseThrow(() -> new IllegalArgumentException("Moto não encontrada: " + form.getMotoId()));
+        Moto moto = buscarMoto(form.getMotoId());
+        Motorista motorista = buscarMotorista(form.getMotoristaId());
+        Patio patioOrigem = buscarPatio(form.getPatioOrigemId());
         
-        Motorista motorista = motoristaService.findById(form.getMotoristaId())
-                .orElseThrow(() -> new IllegalArgumentException("Motorista não encontrado: " + form.getMotoristaId()));
+        validarAlocacao(moto, motorista);
         
-        Patio patioOrigem = patioService.findById(form.getPatioOrigemId())
-                .orElseThrow(() -> new IllegalArgumentException("Pátio não encontrado: " + form.getPatioOrigemId()));
+        Alocacao alocacao = criarAlocacao(form, moto, motorista, patioOrigem);
+        atualizarStatusMoto(moto.getId());
         
-        // Validações de negócio
+        return alocacaoRepository.save(alocacao);
+    }
+    
+    private Moto buscarMoto(Long motoId) {
+        return motoService.findById(motoId)
+                .orElseThrow(() -> new IllegalArgumentException("Moto não encontrada: " + motoId));
+    }
+    
+    private Motorista buscarMotorista(Long motoristaId) {
+        return motoristaService.findById(motoristaId)
+                .orElseThrow(() -> new IllegalArgumentException("Motorista não encontrado: " + motoristaId));
+    }
+    
+    private Patio buscarPatio(Long patioId) {
+        return patioService.findById(patioId)
+                .orElseThrow(() -> new IllegalArgumentException("Pátio não encontrado: " + patioId));
+    }
+    
+    private void validarAlocacao(Moto moto, Motorista motorista) {
+        validarDisponibilidadeMoto(moto);
+        validarMotorista(motorista);
+        validarAlocacaoAtivaMotorista(motorista.getId());
+    }
+    
+    private void validarDisponibilidadeMoto(Moto moto) {
         if (!moto.isDisponivel()) {
             throw new IllegalArgumentException("Moto não está disponível para alocação. Status atual: " + moto.getStatus());
         }
-        
+    }
+    
+    private void validarMotorista(Motorista motorista) {
         if (!motorista.isAtivo()) {
             throw new IllegalArgumentException("Motorista não está ativo");
         }
@@ -70,14 +95,16 @@ public class AlocacaoService {
         if (!motorista.isCnhValida()) {
             throw new IllegalArgumentException("CNH do motorista está vencida");
         }
-        
-        // Verificar se motorista já tem alocação ativa
-        Optional<Alocacao> alocacaoAtivaMotorista = findAtivaByMotoristaId(motorista.getId());
+    }
+    
+    private void validarAlocacaoAtivaMotorista(Long motoristaId) {
+        Optional<Alocacao> alocacaoAtivaMotorista = findAtivaByMotoristaId(motoristaId);
         if (alocacaoAtivaMotorista.isPresent()) {
             throw new IllegalArgumentException("Motorista já possui uma alocação ativa");
         }
-        
-        // Criar alocação
+    }
+    
+    private Alocacao criarAlocacao(AlocacaoForm form, Moto moto, Motorista motorista, Patio patioOrigem) {
         Alocacao alocacao = new Alocacao();
         alocacao.setMoto(moto);
         alocacao.setMotorista(motorista);
@@ -85,11 +112,11 @@ public class AlocacaoService {
         alocacao.setDataHoraSaida(LocalDateTime.now());
         alocacao.setChecklistSaida(form.getChecklistSaida());
         alocacao.setStatus(Alocacao.StatusAlocacao.ATIVA);
-        
-        // Atualizar status da moto
-        motoService.atualizarStatus(moto.getId(), Moto.StatusMoto.ALOCADA);
-        
-        return alocacaoRepository.save(alocacao);
+        return alocacao;
+    }
+    
+    private void atualizarStatusMoto(Long motoId) {
+        motoService.atualizarStatus(motoId, Moto.StatusMoto.ALOCADA);
     }
     
     public Alocacao devolver(Long alocacaoId, DevolucaoForm form) {
@@ -123,5 +150,9 @@ public class AlocacaoService {
         }
         
         return alocacaoRepository.save(alocacao);
+    }
+    
+    public long countAtivas() {
+        return alocacaoRepository.countByStatus(Alocacao.StatusAlocacao.ATIVA);
     }
 }

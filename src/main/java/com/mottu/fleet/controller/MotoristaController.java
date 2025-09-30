@@ -44,7 +44,6 @@ public class MotoristaController {
     }
     
     @GetMapping("/novo")
-    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public String createForm(Model model) {
         model.addAttribute("motoristaForm", new MotoristaForm());
         model.addAttribute("motorista", new Motorista()); // Para o título do formulário

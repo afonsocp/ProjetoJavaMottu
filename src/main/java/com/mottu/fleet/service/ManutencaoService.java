@@ -95,4 +95,8 @@ public class ManutencaoService {
         
         return manutencaoRepository.save(manutencao);
     }
+    
+    public long countAbertas() {
+        return manutencaoRepository.countByStatus(Manutencao.StatusManutencao.ABERTA);
+    }
 }

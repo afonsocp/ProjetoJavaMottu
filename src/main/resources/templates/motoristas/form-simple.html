@@ -169,17 +169,52 @@
                             <i class="bi bi-person me-2"></i>Dados do Motorista
                         </div>
                         <div class="card-body">
-                            <form th:action="@{/motoristas}" th:object="${motoristaForm}" method="post">
-                                <input type="hidden" th:field="*{id}" />
+                            <form th:action="${motoristaForm.id != null ? '/motoristas/' + motoristaForm.id : '/motoristas'}" 
+                                  method="POST" 
+                                  th:object="${motoristaForm}">
+                                <input type="hidden" name="_method" value="PUT" th:if="${motoristaForm.id != null}">
+                                <input type="hidden" th:field="*{id}" th:if="${motoristaForm.id != null}">
                                 
                                 <div class="row g-3">
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                         <label for="nome" class="form-label">
                                             <i class="bi bi-person me-1"></i>Nome Completo *
                                         </label>
                                         <input type="text" class="form-control" th:field="*{nome}" id="nome" 
                                                placeholder="Ex: João Silva Santos" required />
+                                        <div class="form-text">Nome completo do motorista</div>
                                         <div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="cpf" class="form-label">
+                                            <i class="bi bi-credit-card me-1"></i>CPF *
+                                        </label>
+                                        <input type="text" class="form-control" th:field="*{cpf}" id="cpf" 
+                                               placeholder="000.000.000-00" maxlength="11" required />
+                                        <div class="form-text">Apenas números</div>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-4">
+                                        <label for="cnh" class="form-label">
+                                            <i class="bi bi-card-text me-1"></i>CNH *
+                                        </label>
+                                        <input type="text" class="form-control" th:field="*{cnh}" id="cnh" 
+                                               placeholder="Número da CNH" required />
+                                        <div class="form-text">Número da carteira de habilitação</div>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('cnh')}" th:errors="*{cnh}"></div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="validadeCnh" class="form-label">
+                                            <i class="bi bi-calendar-check me-1"></i>Validade CNH *
+                                        </label>
+                                        <input type="date" class="form-control" th:field="*{validadeCnh}" id="validadeCnh" required />
+                                        <div class="form-text">Data de vencimento da CNH</div>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('validadeCnh')}" th:errors="*{validadeCnh}"></div>
                                     </div>
 
                                     <div class="col-md-4">
@@ -190,40 +225,11 @@
                                             <option value="true">Ativo</option>
                                             <option value="false">Inativo</option>
                                         </select>
+                                        <div class="form-text">Status do motorista</div>
                                     </div>
                                 </div>
 
                                 <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
-                                        <label for="cpf" class="form-label">
-                                            <i class="bi bi-credit-card me-1"></i>CPF *
-                                        </label>
-                                        <input type="text" class="form-control" th:field="*{cpf}" id="cpf" 
-                                               placeholder="000.000.000-00" maxlength="11" required />
-                                        <div class="form-text">Apenas números</div>
-                                        <div class="text-danger" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="cnh" class="form-label">
-                                            <i class="bi bi-card-text me-1"></i>CNH *
-                                        </label>
-                                        <input type="text" class="form-control" th:field="*{cnh}" id="cnh" 
-                                               placeholder="Número da CNH" required />
-                                        <div class="text-danger" th:if="${#fields.hasErrors('cnh')}" th:errors="*{cnh}"></div>
-                                    </div>
-                                </div>
-
-                                <div class="row g-3 mt-2">
-                                    <div class="col-md-6">
-                                        <label for="validadeCnh" class="form-label">
-                                            <i class="bi bi-calendar-check me-1"></i>Validade CNH *
-                                        </label>
-                                        <input type="date" class="form-control" th:field="*{validadeCnh}" id="validadeCnh" required />
-                                        <div class="form-text">Data de vencimento da CNH</div>
-                                        <div class="text-danger" th:if="${#fields.hasErrors('validadeCnh')}" th:errors="*{validadeCnh}"></div>
-                                    </div>
-
                                     <div class="col-md-6">
                                         <label for="telefone" class="form-label">
                                             <i class="bi bi-telephone me-1"></i>Telefone
@@ -233,10 +239,8 @@
                                         <div class="form-text">Telefone para contato</div>
                                         <div class="text-danger" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></div>
                                     </div>
-                                </div>
 
-                                <div class="row g-3 mt-2">
-                                    <div class="col-12">
+                                    <div class="col-md-6">
                                         <label for="email" class="form-label">
                                             <i class="bi bi-envelope me-1"></i>E-mail
                                         </label>

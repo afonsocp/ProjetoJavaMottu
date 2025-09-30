@@ -2,14 +2,14 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       th:replace="layout :: layout(~{::title}, ~{::content})">
 <head>
-    <title>Dashboard</title>
+    <title>NeoMoto - Sistema de Gestão</title>==
 </head>
 <body>
     <div th:fragment="content">
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h2 mb-1">Dashboard</h1>
+                <h1 class="h2 mb-1">NeoMoto - Sistema de Gestão</h1>
                 <p class="text-muted mb-0">Visão geral do sistema NeoMoto</p>
             </div>
             <div class="d-flex gap-2">
@@ -29,7 +29,7 @@
                     <div class="icon">
                         <i class="bi bi-bicycle"></i>
                     </div>
-                    <div class="number" th:text="${totalMotos}">4</div>
+                    <div class="number" th:text="${totalMotos}">0</div>
                     <div class="label">Total de Motos</div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <div class="icon">
                         <i class="bi bi-people"></i>
                     </div>
-                    <div class="number" th:text="${totalMotoristas}">3</div>
+                    <div class="number" th:text="${totalMotoristas}">0</div>
                     <div class="label">Motoristas</div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     <div class="icon">
                         <i class="bi bi-arrow-left-right"></i>
                     </div>
-                    <div class="number" th:text="${alocacoesAtivas}">1</div>
+                    <div class="number" th:text="${alocacoesAtivas}">0</div>
                     <div class="label">Alocações Ativas</div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <div class="icon">
                         <i class="bi bi-tools"></i>
                     </div>
-                    <div class="number" th:text="${manutencoesAbertas}">1</div>
+                    <div class="number" th:text="${manutencoesAbertas}">0</div>
                     <div class="label">Manutenções Abertas</div>
                 </div>
             </div>
@@ -113,34 +113,34 @@
                         <div class="row text-center">
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <div class="h3 text-success mb-1">2</div>
+                                    <div class="h3 text-success mb-1" th:text="${motosDisponiveis}">0</div>
                                     <small class="text-muted">Disponíveis</small>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <div class="h3 text-primary mb-1">1</div>
+                                    <div class="h3 text-primary mb-1" th:text="${motosAlocadas}">0</div>
                                     <small class="text-muted">Alocadas</small>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="mb-3">
-                                    <div class="h3 text-warning mb-1">1</div>
+                                    <div class="h3 text-warning mb-1" th:text="${motosEmManutencao}">0</div>
                                     <small class="text-muted">Manutenção</small>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="progress mb-3" style="height: 20px;">
-                            <div class="progress-bar bg-success" style="width: 50%"></div>
-                            <div class="progress-bar bg-primary" style="width: 25%"></div>
-                            <div class="progress-bar bg-warning" style="width: 25%"></div>
+                            <div class="progress-bar bg-success" th:style="'width: ' + ${percentualDisponiveis} + '%'"></div>
+                            <div class="progress-bar bg-primary" th:style="'width: ' + ${percentualAlocadas} + '%'"></div>
+                            <div class="progress-bar bg-warning" th:style="'width: ' + ${percentualManutencao} + '%'"></div>
                         </div>
                         
                         <div class="d-flex justify-content-between small text-muted">
-                            <span>50% Disponíveis</span>
-                            <span>25% Alocadas</span>
-                            <span>25% Manutenção</span>
+                            <span th:text="${percentualDisponiveis} + '% Disponíveis'">0% Disponíveis</span>
+                            <span th:text="${percentualAlocadas} + '% Alocadas'">0% Alocadas</span>
+                            <span th:text="${percentualManutencao} + '% Manutenção'">0% Manutenção</span>
                         </div>
                     </div>
                 </div>
@@ -214,8 +214,8 @@
                         </div>
                         
                         <div class="text-center mt-3">
-                            <a href="/atividades" class="btn btn-outline-primary">
-                                Ver Todas as Atividades
+                            <a href="/alocacoes" class="btn btn-outline-primary">
+                                Ver Alocações
                             </a>
                         </div>
                     </div>

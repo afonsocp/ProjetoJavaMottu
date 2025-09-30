@@ -29,6 +29,8 @@ public interface MotoRepository extends JpaRepository<Moto, Long> {
     
     List<Moto> findByStatus(Moto.StatusMoto status);
     
+    long countByStatus(Moto.StatusMoto status);
+    
     @Query("SELECT m FROM Moto m WHERE m.status = 'DISPONIVEL' ORDER BY m.placa")
     List<Moto> findDisponiveis();
 }
