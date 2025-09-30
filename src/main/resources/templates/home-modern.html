@@ -184,11 +184,11 @@
                         <i class="bi bi-person-circle me-2"></i>
                         <span sec:authentication="name">Usuario</span>
                         <span class="badge bg-light text-primary badge-role" 
-                              sec:authorize="hasRole('ADMIN')">🔑 ADMIN</span>
+                              sec:authorize="hasRole('ADMIN')">ADMIN</span>
                         <span class="badge bg-light text-success badge-role" 
-                              sec:authorize="hasRole('GERENTE')">👨‍💼 GERENTE</span>
+                              sec:authorize="hasRole('GERENTE')">GERENTE</span>
                         <span class="badge bg-light text-warning badge-role" 
-                              sec:authorize="hasRole('OPERADOR')">👷 OPERADOR</span>
+                              sec:authorize="hasRole('OPERADOR')">OPERADOR</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
@@ -212,7 +212,7 @@
         </div>
 
         <!-- Statistics -->
-        <h2 class="section-title">📊 Estatísticas da Frota</h2>
+        <h2 class="section-title">Estatísticas da Frota</h2>
         <div class="row g-4 mb-5">
             <div class="col-lg-3 col-md-6">
                 <div class="stats-card">
@@ -253,7 +253,7 @@
         </div>
 
         <!-- Menu Principal -->
-        <h2 class="section-title">🎯 Menu Principal</h2>
+        <h2 class="section-title">Menu Principal</h2>
         <div class="row g-4 mb-5">
             <!-- Gestão - ADMIN e GERENTE -->
             <div class="col-lg-3 col-md-6" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">

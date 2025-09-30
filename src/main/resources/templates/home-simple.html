@@ -22,11 +22,11 @@
         <div>
             <span>Usuário: <span th:text="${usuario}">admin@mottu.com</span></span>
             <span style="margin-left: 10px; padding: 4px 8px; background: #007bff; color: white; border-radius: 4px; font-size: 0.8em;" 
-                  sec:authorize="hasRole('ADMIN')">🔑 ADMIN</span>
+                  sec:authorize="hasRole('ADMIN')">ADMIN</span>
             <span style="margin-left: 10px; padding: 4px 8px; background: #28a745; color: white; border-radius: 4px; font-size: 0.8em;" 
-                  sec:authorize="hasRole('GERENTE')">👨‍💼 GERENTE</span>
+                  sec:authorize="hasRole('GERENTE')">GERENTE</span>
             <span style="margin-left: 10px; padding: 4px 8px; background: #ffc107; color: black; border-radius: 4px; font-size: 0.8em;" 
-                  sec:authorize="hasRole('OPERADOR')">👷 OPERADOR</span>
+                  sec:authorize="hasRole('OPERADOR')">OPERADOR</span>
             <form th:action="@{/logout}" method="post" style="display: inline; margin-left: 15px;">
                 <button type="submit" class="logout">Sair</button>
             </form>
