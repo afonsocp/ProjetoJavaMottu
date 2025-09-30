@@ -2,6 +2,13 @@
 
 Sistema completo de gestão de frotas da NeoMoto desenvolvido com **Spring Boot**, **Thymeleaf**, **Flyway** e **Spring Security**.
 
+
+## **Membros**
+
+- Afonso Correia Pereira - RM557863
+- Adel Mouhaidly - RM557705
+- Tiago Augusto Desiderato - RM558485
+
 ## 🛠️ **Stack Técnica**
 
 - **Java 21**
