@@ -19,16 +19,16 @@ RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
 # Copiar JAR do build
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/mottu-fleet-0.0.1-SNAPSHOT.jar app.jar
 
 # Expor porta dinâmica
 EXPOSE 8080
 ENV PORT=8080
 
-# Health check (usando variável PORT)
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
 
-# Executar aplicação na porta dinâmica
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
+# Executar aplicação com a porta dinâmica
+ENTRYPOINT ["sh", "-c", "echo 'Iniciando aplicação...' && ls -l && java -jar app.jar --server.port=${PORT}"]
 
