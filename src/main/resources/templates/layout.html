@@ -16,7 +16,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" th:href="@{/}">
                 <i class="bi bi-speedometer2 me-2"></i>
                 NeoMoto
             </a>
@@ -56,41 +56,41 @@
                         <h5 class="mb-0">Menu Principal</h5>
                     </div>
                     <nav class="nav flex-column">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link" th:href="@{/}">
                             <i class="bi bi-house"></i>
                             Dashboard
                         </a>
                         
                         <!-- Gestão de Dados - ADMIN e GERENTE -->
-                        <a class="nav-link" href="/motos" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/motos}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
                             <i class="bi bi-bicycle"></i>
                             Motos
                         </a>
-                        <a class="nav-link" href="/motoristas" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/motoristas}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
                             <i class="bi bi-people"></i>
                             Motoristas
                         </a>
-                        <a class="nav-link" href="/patios" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/patios}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
                             <i class="bi bi-building"></i>
                             Pátios
                         </a>
                         
                         <!-- Operações - Todos os perfis -->
-                        <a class="nav-link" href="/alocacoes">
+                        <a class="nav-link" th:href="@{/alocacoes}">
                             <i class="bi bi-arrow-left-right"></i>
                             Alocações
                         </a>
-                        <a class="nav-link" href="/manutencoes">
+                        <a class="nav-link" th:href="@{/manutencoes}">
                             <i class="bi bi-tools"></i>
                             Manutenções
                         </a>
                         
                         <!-- Acesso para OPERADOR -->
-                        <a class="nav-link" href="/motos" sec:authorize="hasRole('OPERADOR')">
+                        <a class="nav-link" th:href="@{/motos}" sec:authorize="hasRole('OPERADOR')">
                             <i class="bi bi-eye"></i>
                             Ver Motos
                         </a>
-                        <a class="nav-link" href="/motoristas" sec:authorize="hasRole('OPERADOR')">
+                        <a class="nav-link" th:href="@{/motoristas}" sec:authorize="hasRole('OPERADOR')">
                             <i class="bi bi-eye"></i>
                             Ver Motoristas
                         </a>
