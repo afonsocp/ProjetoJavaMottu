@@ -1,0 +1,32 @@
+# Render.com Configuration
+# Este arquivo permite configurar serviços via código (Infrastructure as Code)
+
+services:
+  - type: web
+    name: mottu-fleet
+    env: java
+    buildCommand: ./gradlew bootJar
+    startCommand: java -jar build/libs/mottu-fleet-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: mottu-fleet-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: mottu-fleet-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: mottu-fleet-db
+          property: password
+    healthCheckPath: /
+
+databases:
+  - name: mottu-fleet-db
+    databaseName: mottu_fleet
+    user: mottu_user
+    plan: free
+

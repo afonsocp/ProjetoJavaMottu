@@ -1,5 +1,5 @@
--- V3: Seed reference data
--- Inserção de dados de exemplo para pátios, motoristas e motos
+-- Dev-only seed: dados de exemplo (pátios, motoristas, motos, alocações, manutenções)
+-- Executado apenas em ambiente de desenvolvimento
 
 -- Inserir pátios
 INSERT INTO patios (nome, endereco, capacidade_opcional, observacoes) VALUES 

@@ -1,0 +1,31 @@
+# Fly.io Configuration
+# Gerado automaticamente com: fly launch
+
+app = "mottu-fleet"
+primary_region = "gru"  # São Paulo - ajuste para sua região
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  SPRING_PROFILES_ACTIVE = "prod"
+  SERVER_PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/"
+
+[processes]
+  app = "java -jar app.jar"
+

@@ -78,7 +78,10 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex
                 .accessDeniedPage("/acesso-negado")
             )
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // Habilitado para segurança
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // Mantém CSRF, ignora H2
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+            )
             .authenticationProvider(authenticationProvider(userDetailsService));
         
         return http.build();
