@@ -62,15 +62,15 @@
                         </a>
                         
                         <!-- Gestão de Dados - ADMIN e GERENTE -->
-                        <a class="nav-link" th:href="@{/motos}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/motos}">
                             <i class="bi bi-bicycle"></i>
                             Motos
                         </a>
-                        <a class="nav-link" th:href="@{/motoristas}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/motoristas}">
                             <i class="bi bi-people"></i>
                             Motoristas
                         </a>
-                        <a class="nav-link" th:href="@{/patios}" sec:authorize="hasAnyRole('ADMIN', 'GERENTE')">
+                        <a class="nav-link" th:href="@{/patios}">
                             <i class="bi bi-building"></i>
                             Pátios
                         </a>
