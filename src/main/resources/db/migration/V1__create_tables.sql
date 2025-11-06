@@ -1,15 +1,15 @@
 -- V1: Create tables
--- Criação das tabelas principais do sistema
+-- Criação das tabelas principais do sistema (PostgreSQL compatible)
 
 -- Tabela de roles
 CREATE TABLE roles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Tabela de usuários
 CREATE TABLE usuarios (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE usuarios_roles (
 
 -- Tabela de motos
 CREATE TABLE motos (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     placa VARCHAR(7) NOT NULL UNIQUE,
     modelo VARCHAR(100) NOT NULL,
     ano INTEGER NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE motos (
 
 -- Tabela de motoristas
 CREATE TABLE motoristas (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(11) NOT NULL UNIQUE,
     cnh VARCHAR(20) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE motoristas (
 
 -- Tabela de pátios
 CREATE TABLE patios (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     endereco VARCHAR(200),
     capacidade_opcional INTEGER,
@@ -69,7 +69,7 @@ CREATE TABLE patios (
 
 -- Tabela de alocações
 CREATE TABLE alocacoes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     moto_id BIGINT NOT NULL,
     motorista_id BIGINT NOT NULL,
     patio_origem_id BIGINT NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE alocacoes (
 
 -- Tabela de manutenções
 CREATE TABLE manutencoes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     moto_id BIGINT NOT NULL,
     aberto_em TIMESTAMP NOT NULL,
     aberto_por VARCHAR(100) NOT NULL,
