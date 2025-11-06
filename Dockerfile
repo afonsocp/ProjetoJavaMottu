@@ -21,13 +21,14 @@ USER spring:spring
 # Copiar JAR do build
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Expor porta
+# Expor porta dinâmica
 EXPOSE 8080
+ENV PORT=8080
 
-# Health check
+# Health check (usando variável PORT)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
 
-# Executar aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Executar aplicação na porta dinâmica
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
 
