@@ -19,8 +19,8 @@ public interface MotoristaRepository extends JpaRepository<Motorista, Long> {
     boolean existsByCpf(String cpf);
     
     @Query("SELECT m FROM Motorista m WHERE " +
-           "(:nome IS NULL OR LOWER(m.nome) LIKE LOWER(CONCAT('%', :nome, '%'))) AND " +
-           "(:cpf IS NULL OR m.cpf LIKE CONCAT('%', :cpf, '%')) AND " +
+           "(:nome IS NULL OR :nome = '' OR m.nome LIKE CONCAT('%', :nome, '%')) AND " +
+           "(:cpf IS NULL OR :cpf = '' OR m.cpf LIKE CONCAT('%', :cpf, '%')) AND " +
            "(:ativo IS NULL OR m.ativo = :ativo)")
     Page<Motorista> findByFilters(@Param("nome") String nome, 
                                  @Param("cpf") String cpf, 

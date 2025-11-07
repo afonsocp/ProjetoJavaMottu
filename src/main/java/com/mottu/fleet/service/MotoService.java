@@ -20,7 +20,10 @@ public class MotoService {
     private final MotoRepository motoRepository;
     
     public Page<Moto> findAll(String placa, String modelo, Moto.StatusMoto status, Pageable pageable) {
-        return motoRepository.findByFilters(placa, modelo, status, pageable);
+        // Normalizar strings vazias para null para evitar problemas com PostgreSQL
+        String placaNormalizada = (placa != null && placa.trim().isEmpty()) ? null : placa;
+        String modeloNormalizado = (modelo != null && modelo.trim().isEmpty()) ? null : modelo;
+        return motoRepository.findByFilters(placaNormalizada, modeloNormalizado, status, pageable);
     }
     
     public List<Moto> findAll() {

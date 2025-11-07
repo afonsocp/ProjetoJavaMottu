@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface PatioRepository extends JpaRepository<Patio, Long> {
     
     @Query("SELECT p FROM Patio p WHERE " +
-           "(:nome IS NULL OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))")
+           "(:nome IS NULL OR :nome = '' OR p.nome LIKE CONCAT('%', :nome, '%'))")
     Page<Patio> findByFilters(@Param("nome") String nome, Pageable pageable);
 }

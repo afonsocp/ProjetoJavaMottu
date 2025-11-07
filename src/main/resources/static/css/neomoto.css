@@ -41,6 +41,8 @@ body {
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     padding: 0;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
 .sidebar-header {
@@ -58,12 +60,18 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .nav-link:hover {
     background: linear-gradient(90deg, var(--primary-color) 0%, transparent 100%);
     color: white;
     transform: translateX(5px);
+    text-decoration: none;
 }
 
 .nav-link.active { background: var(--primary-color); color: white; }

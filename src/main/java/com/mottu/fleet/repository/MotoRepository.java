@@ -19,8 +19,8 @@ public interface MotoRepository extends JpaRepository<Moto, Long> {
     boolean existsByPlaca(String placa);
     
     @Query("SELECT m FROM Moto m WHERE " +
-           "(:placa IS NULL OR LOWER(m.placa) LIKE LOWER(CONCAT('%', :placa, '%'))) AND " +
-           "(:modelo IS NULL OR LOWER(m.modelo) LIKE LOWER(CONCAT('%', :modelo, '%'))) AND " +
+           "(:placa IS NULL OR :placa = '' OR m.placa LIKE CONCAT('%', :placa, '%')) AND " +
+           "(:modelo IS NULL OR :modelo = '' OR m.modelo LIKE CONCAT('%', :modelo, '%')) AND " +
            "(:status IS NULL OR m.status = :status)")
     Page<Moto> findByFilters(@Param("placa") String placa, 
                             @Param("modelo") String modelo, 
