@@ -28,10 +28,14 @@ dependencies {
 	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation 'org.postgresql:postgresql'
 	implementation 'com.h2database:h2'  // H2 para desenvolvimento
-	implementation 'org.projectlombok:lombok'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-	
+
+	// Lombok (apenas tempo de compilação)
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	// Lombok para testes
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

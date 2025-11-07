@@ -2,13 +2,14 @@
 FROM gradle:8-jdk21 AS build
 WORKDIR /app
 
-# Copiar arquivos de build
-COPY build.gradle settings.gradle ./
+# Copiar arquivos de build (inclui wrapper)
+COPY gradlew ./
 COPY gradle ./gradle
+COPY build.gradle settings.gradle ./
 COPY src ./src
 
-# Build da aplicação
-RUN gradle bootJar --no-daemon
+# Build da aplicação usando o wrapper do projeto
+RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 
 # Imagem final
 FROM eclipse-temurin:21-jre-alpine
